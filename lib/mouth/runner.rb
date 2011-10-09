@@ -52,10 +52,7 @@ module Mouth
     
     def setup_logging!
       if @log_file
-        # Write standard out to this location
-        stdout_log_file = "#{File.dirname(@log_file)}/#{File.basename(@log_file, ".log")}_stdout.log"
-        STDOUT.reopen(stdout_log_file, "a")
-        STDERR.reopen(STDOUT)
+        STDERR.reopen(@log_file, 'a')
         
         # Open a logger
         self.logger = Logger.new(@log_file)
