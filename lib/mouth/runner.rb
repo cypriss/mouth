@@ -24,8 +24,9 @@ module Mouth
       save_pid!
       setup_logging!
       
-      # Start the logger!
-      Mouth::Reactor.new(self.options)
+      # Start the reactor!
+      reactor = Mouth::Reactor.new(self.options)
+      reactor.react!
     end
     
     def daemonize!

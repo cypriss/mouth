@@ -14,9 +14,6 @@ module Mouth
       
       self.counters = {}
       self.timers = {}
-      
-      # Start the EM loop.  Doesn't return.
-      react!
     end
     
     def react!
