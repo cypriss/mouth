@@ -1,12 +1,12 @@
 module Mouth
   
   class SuckerConnection < EM::Connection
-    attr_accessor :reactor
+    attr_accessor :sucker
   
     def receive_data(data)
       Mouth.logger.debug "UDP packet: '#{data}'"
   
-      reactor.store!(data)
+      sucker.store!(data)
     end
   end
   
@@ -27,12 +27,12 @@ module Mouth
       self.timers = {}
     end
     
-    def react!
+    def suck!
       EM.run do
         self.mongo_db = EM::Mongo::Connection.new('localhost').db('mouth')
 
         EM.open_datagram_socket host, port, SuckerConnection do |conn|
-          conn.reactor = self
+          conn.sucker = self
         end
         
         EM.add_periodic_timer(10) do
