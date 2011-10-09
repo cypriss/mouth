@@ -1,4 +1,5 @@
 .rvmrc
 log/*.log
 log/*.pid
+Gemfile.lock
 
