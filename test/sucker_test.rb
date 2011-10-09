@@ -3,7 +3,6 @@ require 'test_helper'
 
 class SuckerTest < Test::Unit::TestCase
   def setup
-    puts "Setup"
   end
   
   def test_storing_count
