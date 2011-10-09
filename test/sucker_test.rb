@@ -6,7 +6,7 @@ class SuckerTest < Test::Unit::TestCase
   end
   
   def test_storing_count
-    r = Mouth::Reactor.new
+    r = Mouth::Sucker.new
     
     r.store!("c:happening:3")
     
@@ -14,7 +14,7 @@ class SuckerTest < Test::Unit::TestCase
   end
   
   def test_storing_timer
-    r = Mouth::Reactor.new
+    r = Mouth::Sucker.new
     
     r.store!("ms:happening:3.7")
     assert_equal ({"happening"=>[3.7]}), r.timers.values.first

@@ -1,4 +1,4 @@
 .rvmrc
-*.log
-*.pid
+log/*.log
+log/*.pid
 

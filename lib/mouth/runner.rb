@@ -25,8 +25,8 @@ module Mouth
       setup_logging!
       
       # Start the reactor!
-      reactor = Mouth::Reactor.new(self.options)
-      reactor.react!
+      sucker = Mouth::Sucker.new(self.options)
+      sucker.suck!
     end
     
     def daemonize!

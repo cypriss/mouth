@@ -10,7 +10,7 @@ module Mouth
     end
   end
   
-  class Reactor
+  class Sucker
     attr_accessor :host
     attr_accessor :port
 
@@ -203,5 +203,5 @@ module Mouth
       end
     end
     
-  end # class Reactor
+  end # class Sucker
 end # module
