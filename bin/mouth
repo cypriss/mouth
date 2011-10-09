@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
+
+require 'optparse'
+require 'mouth'
+
+options = {
+  :verbosity => 0,
+  :host => "localhost",
+  :port => 8887
+}
+
+parser = OptionParser.new do |op|
+  op.banner = "Usage: mouth [options]"
+
+  op.separator ""
+  op.separator "Options:"
+
+  ##
+  ## Daemonization / Logging options
+  ##
+
+  op.on("--pidfile PATH", "DO YOU WANT ME TO WRITE A PIDFILE SOMEWHERE FOR U?") do |pid_file|
+    options[:pid_file] = pid_file
+  end
+  
+  op.on("--logfile PATH", "I'LL POOP OUT LOGS HERE FOR U") do |log_file|
+    options[:log_file] = log_file
+  end
+  
+  op.on("-v", "--verbosity LEVEL", "HOW MUCH POOP DO U WANT IN UR LOGS? [LEVEL=0,1,2]") do |verbosity|
+    options[:verbosity] = verbosity.to_i
+  end
+  
+  ##
+  ## Socket to suck from
+  ##
+  
+  op.on("-H", "--host HOST", "I SUCK ON THIS NETWORK INTERFACE") do |host|
+    options[:host] = host
+  end
+  
+  op.on("-P", "--port PORT", "I SUCK FROM THIS HOLE") do |port|
+    options[:port] = port.to_i
+  end
+
+  op.on("-h", "--help", "I WANT MOAR HALP") do
+    puts op
+    exit
+  end
+
+  op.separator ""
+end
+
+parser.parse!
+
+Mouth::Runner.new(options).run!
