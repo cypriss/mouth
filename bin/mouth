@@ -29,7 +29,7 @@ parser = OptionParser.new do |op|
     options[:log_file] = log_file
   end
   
-  op.on("-v", "--verbosity LEVEL", "HOW MUCH POOP DO U WANT IN UR LOGS? [LEVEL=0,1,2]") do |verbosity|
+  op.on("-v", "--verbosity LEVEL", "HOW MUCH POOP DO U WANT IN UR LOGS? [LEVEL=0:errors,1:some,2:lots of poop]") do |verbosity|
     options[:verbosity] = verbosity.to_i
   end
   
@@ -43,6 +43,19 @@ parser = OptionParser.new do |op|
   
   op.on("-P", "--port PORT", "I SUCK FROM THIS HOLE") do |port|
     options[:port] = port.to_i
+  end
+  
+  ##
+  ## Mongo
+  ##
+  op.on("--mongodb DATABASE", "STORE SUCKINGS IN THIS DB") do |mongodb|
+    options[:mongo_db] = mongo_db
+  end
+  
+  # NOTE: this option can be given multiple times for a replica set
+  op.on("--mongohost HOSTPORT", "STORE SUCKINGS IN THIS MONGO") do |mongo_host|
+    options[:mongo_hosts] ||= []
+    options[:mongo_hosts] << mongo_host
   end
 
   op.on("-h", "--help", "I WANT MOAR HALP") do

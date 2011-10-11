@@ -1,3 +1,11 @@
 
 -K option to kill previous running version
 
+Config file to read mongo info from
+
+Great readme
+
+Update -h options to display helpful information
+
+Example files for how to record metrics in various languages
+ - Ruby, php, python, .NET

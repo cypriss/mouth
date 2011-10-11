@@ -11,17 +11,27 @@ module Mouth
   end
   
   class Sucker
+    
+    # Host/Port to suck UDP packets on
     attr_accessor :host
     attr_accessor :port
 
+    # Actual EM::Mongo connection
+    attr_accessor :mongo_db
+    
+    # Info to connect to mongo
+    attr_accessor :mongo_db_name
+    attr_accessor :mongo_hosts
+    
+    # Accumulators of our data
     attr_accessor :counters
     attr_accessor :timers
-    
-    attr_accessor :mongo_db
     
     def initialize(options = {})
       self.host = options[:host] || "localhost"
       self.port = options[:port] || 8887
+      self.mongo_db_name = options[:mongo_db_name] || "mouth"
+      self.mongo_hosts = options[:mongo_hosts] || ["localhost"]
       
       self.counters = {}
       self.timers = {}
@@ -29,7 +39,8 @@ module Mouth
     
     def suck!
       EM.run do
-        self.mongo_db = EM::Mongo::Connection.new('localhost').db('mouth')
+        # Connect to mongo now
+        self.mongo_db
 
         EM.open_datagram_socket host, port, SuckerConnection do |conn|
           conn.sucker = self
@@ -70,8 +81,8 @@ module Mouth
       limit_ts = ts - 1
       mongo_docs = {}
       
-      # {
-      #   t: 33353
+      # We're going to construct mongo_docs which look like this:
+      # "mycollections:234234": {  # NOTE: this timpstamp will be popped into .t = 234234
       #   c: {
       #     poopings: 37,
       #     shittings: 3
@@ -113,12 +124,12 @@ module Mouth
         end
       end
       
-      Mouth.logger.info "Flushing Docs: #{mongo_docs.inspect}"
-      
       save_documents!(mongo_docs)
     end
     
     def save_documents!(mongo_docs)
+      Mouth.logger.info "Saving Docs: #{mongo_docs.inspect}"
+      
       mongo_docs.each do |key, doc|
         ns, ts = key.split(":")
         collection_name = "mouth_#{ns}"
@@ -129,6 +140,16 @@ module Mouth
     end
     
     private
+    
+    def mongo_db
+      @mongo_db ||= begin
+        if self.mongo_hosts.length == 1
+          EM::Mongo::Connection.new(self.mongo_hosts.first).db(self.mongo_db_name)
+        else
+          raise "TODO: ability to connect to a replica set."
+        end
+      end
+    end
     
     def minute_timestamps
       Time.now.to_i / 60
