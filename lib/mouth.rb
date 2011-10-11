@@ -1,3 +1,4 @@
+# Only include those things needed for the sucker/daemon, NOT the web server
 require 'em-mongo'
 require 'eventmachine'
 require 'mouth/runner'

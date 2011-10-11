@@ -9,3 +9,27 @@ Update -h options to display helpful information
 
 Example files for how to record metrics in various languages
  - Ruby, php, python, .NET
+
+For displaying of graphs:
+Grid system, 100px x 100px (say) -- coordinate system with UL being 0,0
+10,5 is 10 squares down and 5 squares right
+
+Dashboard
+width, height
+
+Graph
+dashboard_id
+
+position:
+  top, left, height, width
+
+start_time -- in minutes (Time.now.to_i / 60)
+end_time -- in minutes
+granularity -- :minute, :hour, :day
+
+series: [] of
+  kind - line (default), bar, bar-stacked, area-stacked
+  color
+  source: mouth_xxx
+  
+

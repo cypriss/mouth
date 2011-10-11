@@ -1,5 +1,7 @@
 require 'sinatra/base'
 require 'erb'
+require 'mouth/graph'
+require 'mouth/dashboard'
 
 module Mouth
   class Endoscope < Sinatra::Base
@@ -10,7 +12,9 @@ module Mouth
     set :public, "#{dir}/endoscope/public"
     
     get '/' do
-      erb :dashboard
+      dashboard = Dashboard.default
+      
+      erb :dashboard, {:layout => false}, :dashboard => dashboard
     end
   end
 end
