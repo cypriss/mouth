@@ -29,7 +29,7 @@ module Mouth
     
     def initialize(options = {})
       self.host = options[:host] || "localhost"
-      self.port = options[:port] || 8887
+      self.port = options[:port] || 8889
       self.mongo_db_name = options[:mongo_db_name] || "mouth"
       self.mongo_hosts = options[:mongo_hosts] || ["localhost"]
       
@@ -139,8 +139,6 @@ module Mouth
       end
     end
     
-    private
-    
     def mongo_db
       @mongo_db ||= begin
         if self.mongo_hosts.length == 1
@@ -150,6 +148,8 @@ module Mouth
         end
       end
     end
+    
+    private
     
     def minute_timestamps
       Time.now.to_i / 60

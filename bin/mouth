@@ -8,7 +8,7 @@ require 'mouth'
 options = {
   :verbosity => 0,
   :host => "localhost",
-  :port => 8887
+  :port => 8889
 }
 
 parser = OptionParser.new do |op|
@@ -48,7 +48,7 @@ parser = OptionParser.new do |op|
   ##
   ## Mongo
   ##
-  op.on("--mongodb DATABASE", "STORE SUCKINGS IN THIS DB") do |mongodb|
+  op.on("--mongodb DATABASE", "STORE SUCKINGS IN THIS DB") do |mongo_db|
     options[:mongo_db] = mongo_db
   end
   
