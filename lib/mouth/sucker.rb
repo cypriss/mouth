@@ -133,7 +133,7 @@ module Mouth
       mongo_docs.each do |key, doc|
         ns, ts = key.split(":")
         collection_name = "mouth_#{ns}"
-        doc["t"] = ts
+        doc["t"] = ts.to_i
         
         self.mongo_db.collection(collection_name).insert(doc)
       end
