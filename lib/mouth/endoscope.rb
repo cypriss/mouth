@@ -15,8 +15,8 @@ module Mouth
     
     dir = File.dirname(File.expand_path(__FILE__))
 
-    set :views,  "#{dir}/endoscope/views"
-    set :public, "#{dir}/endoscope/public"
+    set :views, "#{dir}/endoscope/views"
+    set :public_folder, "#{dir}/endoscope/public"
     
     get '/' do
       erb :dashboard
