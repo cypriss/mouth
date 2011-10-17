@@ -14,6 +14,11 @@ module Mouth
       g
     end
     
+    def self.all_with_default
+      dashboards = Mouth.mongo.collection("dashboards").find.to_a
+      dashboards << default if dashboards.length == 0
+    end
+    
     def self.default
       new
     end

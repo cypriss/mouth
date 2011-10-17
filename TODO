@@ -31,5 +31,3 @@ series: [] of
   kind - line (default), bar, bar-stacked, area-stacked
   color
   source: mouth_xxx
-  
-
