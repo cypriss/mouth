@@ -32,9 +32,9 @@ module Mouth
     get '/dashboards' do
       connect_to_mongo! # TODO: before filter
       dashboards = Dashboard.all_with_default
-#      content_type 'application/json'
-#      '{"hello":"world"}'
-      dashboards.inspect
+      content_type 'application/json'
+      '[{"poop": 2, "id": 3423423},{"poop": true, "id": 888373}]'
+      #dashboards.inspect
     end
     
     get '/dashboards/:id' do
