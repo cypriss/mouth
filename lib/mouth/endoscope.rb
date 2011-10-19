@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'erb'
 require 'mongo'
+require 'yajl'
 
 require 'mouth/graph'
 require 'mouth/dashboard'
@@ -18,6 +19,10 @@ module Mouth
     set :views, "#{dir}/endoscope/views"
     set :public_folder, "#{dir}/endoscope/public"
     
+    before do
+      connect_to_mongo!
+    end
+    
     get '/' do
       erb :dashboard
     end
@@ -30,17 +35,18 @@ module Mouth
     # Returns all dashboards and all associated
     # If a dashboard does not exist, creates one
     get '/dashboards' do
-      connect_to_mongo! # TODO: before filter
       dashboards = Dashboard.all_with_default
-      content_type 'application/json'
-      '[{"poop": 2, "id": 3423423},{"poop": true, "id": 888373}]'
-      #dashboards.inspect
+      render_json(dashboards)
     end
     
     get '/dashboards/:id' do
+      d = Document.first(params[:id])
+      d = Dashboard.create(json_input)
     end
     
     post '/dashboards' do
+      d = Dashboard.create(json_input)
+      render_json(d)
     end
     
     put '/dashboards/:id' do
@@ -53,8 +59,25 @@ module Mouth
     ## Graph API
     ##
     
+    def json_input
+      Yajl::Parser.parse(request.env["rack.input"].read)
+    end
+    
+    def render_json(attributables)
+      content_type 'application/json'
+      encodable = if attributables.is_a?(Array)
+        attributables.collect(&:attributes)
+      else
+        attributables.attributes
+      end
+      Yajl::Encoder.encode(encodable)
+    end
+    
     def connect_to_mongo!
-      Mouth.mongo ||= Mongo::Connection.new("localhost").db("mouth")
+      Mouth.mongo ||= begin
+        puts "~~~~~~~~ GETTING NEW MONGO ~~~~~~~~~"
+        Mongo::Connection.new("localhost").db("mouth")
+      end
     end
     
   end

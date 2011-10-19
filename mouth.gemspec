@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'eventmachine', '~> 0.12.10'
   s.add_runtime_dependency 'vegas', '~> 0.1.8'
   s.add_runtime_dependency 'sinatra', '~> 1.3.1'
+  s.add_runtime_dependency 'yajl-ruby', '~> 1.0.0'
   
   s.required_ruby_version = '>= 1.9.2'
   s.required_rubygems_version = '>= 1.3.4'
