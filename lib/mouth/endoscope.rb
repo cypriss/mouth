@@ -35,13 +35,16 @@ module Mouth
     # Returns all dashboards and all associated
     # If a dashboard does not exist, creates one
     get '/dashboards' do
-      dashboards = Dashboard.all_with_default
+      dashboards = Dashboard.all
+      if dashboards.length == 0
+        dashboards = [Dashboard.create(:name => "Main", :height => 100, :width => 100)]
+      end
+      
       render_json(dashboards)
     end
     
     get '/dashboards/:id' do
       d = Document.first(params[:id])
-      d = Dashboard.create(json_input)
     end
     
     post '/dashboards' do
