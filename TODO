@@ -1,4 +1,10 @@
 
+ - Association between dashboard and graph
+ - Rendering a dashboard collection includes all graphs
+ - 
+
+-----------------------------------
+
 -K option to kill previous running version
 
 Config file to read mongo info from
@@ -31,3 +37,8 @@ series: [] of
   kind - line (default), bar, bar-stacked, area-stacked
   color
   source: mouth_xxx
+
+
+$LOAD_PATH.unshift File.expand_path(`pwd`.chomp + '/lib')
+require 'mouth/endoscope'
+Mouth.mongo = Mongo::Connection.new("localhost").db("mouth")

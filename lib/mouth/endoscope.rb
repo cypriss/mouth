@@ -3,6 +3,7 @@ require 'erb'
 require 'mongo'
 require 'yajl'
 
+require 'mouth/record'
 require 'mouth/graph'
 require 'mouth/dashboard'
 
