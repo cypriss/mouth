@@ -63,6 +63,11 @@ module Mouth
     ## Graph API
     ##
     
+    post '/graphs' do
+      g = Graph.create(json_input)
+      render_json(g)
+    end
+    
     def json_input
       Yajl::Parser.parse(request.env["rack.input"].read)
     end
@@ -70,7 +75,7 @@ module Mouth
     def render_json(attributables)
       content_type 'application/json'
       encodable = if attributables.is_a?(Array)
-        attributables.collect(&:attributes)
+        attributables.collect(&:all_attributes)
       else
         attributables.attributes
       end

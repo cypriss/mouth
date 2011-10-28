@@ -10,6 +10,10 @@ module Mouth
       self.attributes = normalize_attributes(attrs)
     end
     
+    def all_attributes
+      self.attributes
+    end
+    
     def save
       if self.attributes[:id]
         attrs = self.attributes.dup
