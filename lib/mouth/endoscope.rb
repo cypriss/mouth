@@ -6,6 +6,7 @@ require 'yajl'
 require 'mouth/record'
 require 'mouth/graph'
 require 'mouth/dashboard'
+require 'mouth/stream'
 
 module Mouth
   
@@ -68,6 +69,23 @@ module Mouth
       render_json(g)
     end
     
+    ##
+    ## Data
+    ##
+    
+    get '/streams/all' do
+      s = Stream.all
+      render_json(s)
+    end
+    
+    get '/stream' do
+      
+    end
+    
+    ##
+    ## Helpers
+    ##
+    
     def json_input
       Yajl::Parser.parse(request.env["rack.input"].read)
     end
@@ -77,7 +95,7 @@ module Mouth
       encodable = if attributables.is_a?(Array)
         attributables.collect(&:all_attributes)
       else
-        attributables.attributes
+        attributables.all_attributes
       end
       Yajl::Encoder.encode(encodable)
     end
