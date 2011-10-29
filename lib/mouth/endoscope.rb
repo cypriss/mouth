@@ -46,7 +46,7 @@ module Mouth
     end
     
     get '/dashboards/:id' do
-      d = Document.first(params[:id])
+      d = Document.find(params[:id])
     end
     
     post '/dashboards' do
@@ -69,17 +69,18 @@ module Mouth
       render_json(g)
     end
     
+    get '/graphs/:id/data' do
+      d = Graph.find(params[:id]).data(json_input || params)
+      render_json(d)
+    end
+    
     ##
     ## Data
     ##
     
-    get '/streams/all' do
+    get '/streams' do
       s = Stream.all
       render_json(s)
-    end
-    
-    get '/stream' do
-      
     end
     
     ##

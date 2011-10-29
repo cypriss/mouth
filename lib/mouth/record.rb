@@ -46,6 +46,10 @@ module Mouth
       @collection ||= Mouth.mongo.collection(tableized)
     end
     
+    def self.find(id)
+      collection.find({"_id" => BSON::ObjectId(id)}).to_a.collect {|d| new(d) }.first
+    end
+    
     def self.create(attributes)
       r = new(attributes)
       r.save

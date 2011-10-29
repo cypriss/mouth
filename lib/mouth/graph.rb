@@ -28,10 +28,23 @@ module Mouth
   # }
   class Graph < Record
     
+    class Attributable
+      attr_accessor :all_attributes
+      def initialize(a)
+        self.all_attributes = a
+      end
+    end
+    
     def save
       bson_object_id_ize(:dashboard_id) do
         super
       end
+    end
+    
+    def data(options)
+      puts "Graph.data: #{options.inspect}"
+      
+      Attributable.new (1..20).to_a
     end
     
     def bson_object_id_ize(*args)
