@@ -20,7 +20,7 @@ module Mouth
   #       :color => "red",
   #       :source => {
   #         :collection => "mouth_auth",
-  #         :kind => "count",
+  #         :kind => "counter",
   #         :key => "inline_logged_in"
   #       }
   #     }
@@ -28,38 +28,37 @@ module Mouth
   # }
   class Graph < Record
     
-    # TODO: put in own file or find a way to delete this shit
-    class Attributable
-      attr_accessor :all_attributes
-      def initialize(a)
-        self.all_attributes = a
-      end
-    end
-    
     def save
       bson_object_id_ize(:dashboard_id) do
         super
       end
     end
     
-    def data
-      end_time = 21972511 #Time.now.to_i / 60 - (4*24*60)
-      start_time = end_time - self.attributes[:window]
+    # Options:
+    #  - :window
+    #  - :granularity
+    def data(options = {})
+      window = options[:window] || self.attributes[:window] || 240
+      granularity = options[:granularity] || self.attributes[:granularity] || "minute"
       
+      end_time = Time.now.to_i / 60
+      start_time = end_time - window
       d = self.attributes[:series].collect do |s|
-        col = Mouth.mongo.collection(s[:source][:collection])
-        if self.attributes[:granularity] == "minute"
-          col.find({:t => {"$gte" => start_time, "$lte" => end_time}}).to_a
+        col = Mouth.mongo.collection(s["source"]["collection"]) # TODO: use symbols here, convert all things coming from mongo to return symbols
+        kind = s["source"]["kind"] == "timer" ? "ms" : "c"
+        key = s["source"]["key"]
+        
+        if granularity == "minute"
+          if kind == "c"
+            entries = col.find({:t => {"$gte" => start_time, "$lte" => end_time}}).sort("t", 1).to_a.collect {|e| e[kind][key] }
+          else
+            # For now, let's just graph the mean. TODO: return a tuple here
+            entries = col.find({:t => {"$gte" => start_time, "$lte" => end_time}}).sort("t", 1).to_a.collect {|e| e[kind][key]["mean"] }
+          end
         else
-          
+          ["poop"]
         end
       end
-      
-      a= if self.attributes[:granularity] == "minute"
-        self.class.collection.find({:t => {"$gte" => start_time, "$lte" => end_time}}).to_a
-      end
-      a
-      #Attributable.new a
     end
     
     def bson_object_id_ize(*args)
@@ -74,6 +73,18 @@ module Mouth
     
     def self.for_dashboard(dashboard_id)
       collection.find({:dashboard_id => BSON::ObjectId(dashboard_id.to_s)}).to_a.collect {|g| new(g) }
+    end
+    
+    def self.sample
+      cur_time = Time.now.to_i / 60
+      col = Mouth.mongo.collection("mouth_auth")
+      
+      beg_time = cur_time - 60*4 # 4 hours
+      (beg_time..cur_time).each do |t|
+        doc = {"c" => {"inline_logged_in" => rand(100)}, "t" => t}
+        col.insert(doc)
+      end
+      
     end
     
   end

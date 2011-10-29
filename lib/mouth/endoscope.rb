@@ -71,7 +71,8 @@ module Mouth
     
     get '/graphs/:id/data' do
       d = Graph.find(params[:id]).data
-      render_json(d)
+      content_type 'application/json'
+      Yajl::Encoder.encode(d)
     end
     
     ##
