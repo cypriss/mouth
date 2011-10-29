@@ -43,10 +43,23 @@ module Mouth
     end
     
     def data
+      end_time = 21972511 #Time.now.to_i / 60 - (4*24*60)
+      start_time = end_time - self.attributes[:window]
       
+      d = self.attributes[:series].collect do |s|
+        col = Mouth.mongo.collection(s[:source][:collection])
+        if self.attributes[:granularity] == "minute"
+          col.find({:t => {"$gte" => start_time, "$lte" => end_time}}).to_a
+        else
+          
+        end
+      end
       
-      
-      Attributable.new (1..20).to_a
+      a= if self.attributes[:granularity] == "minute"
+        self.class.collection.find({:t => {"$gte" => start_time, "$lte" => end_time}}).to_a
+      end
+      a
+      #Attributable.new a
     end
     
     def bson_object_id_ize(*args)
