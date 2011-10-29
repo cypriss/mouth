@@ -28,6 +28,7 @@ module Mouth
   # }
   class Graph < Record
     
+    # TODO: put in own file or find a way to delete this shit
     class Attributable
       attr_accessor :all_attributes
       def initialize(a)
@@ -41,8 +42,9 @@ module Mouth
       end
     end
     
-    def data(options)
-      puts "Graph.data: #{options.inspect}"
+    def data
+      
+      
       
       Attributable.new (1..20).to_a
     end

@@ -70,7 +70,7 @@ module Mouth
     end
     
     get '/graphs/:id/data' do
-      d = Graph.find(params[:id]).data(json_input || params)
+      d = Graph.find(params[:id]).data
       render_json(d)
     end
     
