@@ -75,13 +75,83 @@ module Mouth
       collection.find({:dashboard_id => BSON::ObjectId(dashboard_id.to_s)}).to_a.collect {|g| new(g) }
     end
     
-    def self.sample
+    def self.sample_graphs
+      dashboards = Dashboard.all
+      if dashboards.length == 0
+        dashboards = [Dashboard.create(:name => "Main", :height => 100, :width => 100)]
+      end
+      d = dashboards.first
+      
+      sg = {
+        :dashboard_id => d.attributes[:id],
+        :position => {
+          :top => 0,
+          :left => 50,
+          :height => 20,
+          :width => 50
+        },
+        :window => 240,
+        :granularity => "minute",
+        :series => [
+          {
+            :kind => "line",
+            :color => "red",
+            :source => {
+              :collection => "mouth_auth",
+              :kind => "counter",
+              :key => "inline_logged_in"
+            }
+          }
+        ]
+      }
+      Graph.create(sg)
+      
+      sg = {
+        :dashboard_id => d.attributes[:id],
+        :position => {
+          :top => 0,
+          :left => 0,
+          :height => 20,
+          :width => 50
+        },
+        :window => 240,
+        :granularity => "minute",
+        :series => [
+          {
+            :kind => "candle",
+            :color => "blue",
+            :source => {
+              :collection => "mouth_auth",
+              :kind => "timer",
+              :key => "authentications"
+            }
+          }
+        ]
+      }
+      Graph.create(sg)
+      
+    end
+    
+    def self.sample_data
       cur_time = Time.now.to_i / 60
       col = Mouth.mongo.collection("mouth_auth")
-      
+      col.remove
       beg_time = cur_time - 60*4 # 4 hours
+      
+      last_val = rand(100)
       (beg_time..cur_time).each do |t|
-        doc = {"c" => {"inline_logged_in" => rand(100)}, "t" => t}
+        last_val = last_val + rand(10) - 5
+        doc = {"c" => {"inline_logged_in" => last_val}, "t" => t}
+        mean = 50 + rand(20)
+        doc["ms"] = {
+          "count" => last_val,
+          "min" => 20 + rand(20),
+          "max" => 70 + rand(20),
+          "mean" => mean,
+          "sum" => last_val * mean,
+          "median" => mean + rand(4),
+          "stddev" => mean / 4,
+        }
         col.insert(doc)
       end
       
