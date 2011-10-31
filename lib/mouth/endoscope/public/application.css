@@ -29,3 +29,7 @@ body {
   right: 0;
   bottom: 0;
 }
+
+#current_dashboard #grid li {
+  position: absolute;
+}

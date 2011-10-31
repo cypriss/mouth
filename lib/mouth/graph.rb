@@ -49,12 +49,7 @@ module Mouth
         key = s["source"]["key"]
         
         if granularity == "minute"
-          if kind == "c"
-            entries = col.find({:t => {"$gte" => start_time, "$lte" => end_time}}).sort("t", 1).to_a.collect {|e| e[kind][key] }
-          else
-            # For now, let's just graph the mean. TODO: return a tuple here
-            entries = col.find({:t => {"$gte" => start_time, "$lte" => end_time}}).sort("t", 1).to_a.collect {|e| e[kind][key]["mean"] }
-          end
+          entries = col.find({:t => {"$gte" => start_time, "$lte" => end_time}}).sort("t", 1).to_a.collect {|e| e[kind][key] }
         else
           ["poop"]
         end
@@ -86,9 +81,9 @@ module Mouth
         :dashboard_id => d.attributes[:id],
         :position => {
           :top => 0,
-          :left => 50,
-          :height => 20,
-          :width => 50
+          :left => 20,
+          :height => 7,
+          :width => 20
         },
         :window => 240,
         :granularity => "minute",
@@ -111,8 +106,8 @@ module Mouth
         :position => {
           :top => 0,
           :left => 0,
-          :height => 20,
-          :width => 50
+          :height => 7,
+          :width => 20
         },
         :window => 240,
         :granularity => "minute",
@@ -141,9 +136,9 @@ module Mouth
       last_val = rand(100)
       (beg_time..cur_time).each do |t|
         last_val = last_val + rand(10) - 5
-        doc = {"c" => {"inline_logged_in" => last_val}, "t" => t}
+        doc = {"c" => {"inline_logged_in" => last_val}, "ms" => {}, "t" => t}
         mean = 50 + rand(20)
-        doc["ms"] = {
+        doc["ms"]["authentications"] = {
           "count" => last_val,
           "min" => 20 + rand(20),
           "max" => 70 + rand(20),
