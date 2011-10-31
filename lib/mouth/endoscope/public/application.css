@@ -33,3 +33,15 @@ body {
 #current_dashboard #grid li {
   position: absolute;
 }
+
+.graph-header {
+  cursor: move;
+}
+
+.graph-header .edit {
+  cursor: default;
+}
+
+.graph-body {
+  overflow: hidden;
+}

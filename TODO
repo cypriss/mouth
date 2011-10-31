@@ -1,7 +1,37 @@
 
- - Association between dashboard and graph
- - Rendering a dashboard collection includes all graphs
- - 
+ - New current task: make a new graph
+ - Also: dragging a chart around should save it
+ - Clicking on a chart should flip it over
+ 
+ sg = {
+   :dashboard_id => d.attributes[:id],
+   :position => {
+     :top => 0,
+     :left => 0,
+     :height => 7,
+     :width => 20
+   },
+   :window => 240,
+   :granularity => "minute",
+   :series => [
+     {
+       :kind => "candle",
+       :color => "blue",
+       :source => {
+         :collection => "mouth_auth",
+         :kind => "timer",
+         :key => "authentications"
+       }
+     }
+   ]
+ }
+ 
+ To make a new graph, the minimum amount of information we need:
+  (dashboard id: we have this, it's the current dashboard)
+  (position: let's just position it automatically)
+  (window/granularity: leave blank!)
+  Need to pick which Chart to display from a list
+  Maybe choose a fucking color
 
 -----------------------------------
 
@@ -15,28 +45,6 @@ Update -h options to display helpful information
 
 Example files for how to record metrics in various languages
  - Ruby, php, python, .NET
-
-For displaying of graphs:
-Grid system, 100px x 100px (say) -- coordinate system with UL being 0,0
-10,5 is 10 squares down and 5 squares right
-
-Dashboard
-width, height
-
-Graph
-dashboard_id
-
-position:
-  top, left, height, width
-
-start_time -- in minutes (Time.now.to_i / 60)
-end_time -- in minutes
-granularity -- :minute, :hour, :day
-
-series: [] of
-  kind - line (default), bar, bar-stacked, area-stacked
-  color
-  source: mouth_xxx
 
 
 $LOAD_PATH.unshift File.expand_path(`pwd`.chomp + '/lib')
