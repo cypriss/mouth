@@ -69,6 +69,14 @@ module Mouth
       render_json(g)
     end
     
+    put '/graphs/:id' do
+      g = Graph.find(params[:id])
+      ji = json_input
+      puts "HI scro, here's some ji: #{ji.inspect}"
+      g.update(ji)
+      render_json(g)
+    end
+    
     get '/graphs/:id/data' do
       d = Graph.find(params[:id]).data
       content_type 'application/json'

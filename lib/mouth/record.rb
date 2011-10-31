@@ -26,6 +26,11 @@ module Mouth
       true
     end
     
+    def update(new_attrs)
+      self.attributes = normalize_attributes(new_attrs)
+      self.save
+    end
+    
     def normalize_attributes(attrs)
       normalize = lambda do |h|
         hd = {}
