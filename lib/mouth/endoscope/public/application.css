@@ -45,3 +45,7 @@ body {
 .graph-body {
   overflow: hidden;
 }
+
+.graph-back {
+  background-color: teal;
+}

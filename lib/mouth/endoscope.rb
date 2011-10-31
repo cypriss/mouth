@@ -55,6 +55,9 @@ module Mouth
     end
     
     put '/dashboards/:id' do
+      d = Dashboard.find(params[:id])
+      d.update(json_input)
+      render_json(d)
     end
     
     delete '/dashboards/:id' do
@@ -71,9 +74,7 @@ module Mouth
     
     put '/graphs/:id' do
       g = Graph.find(params[:id])
-      ji = json_input
-      puts "HI scro, here's some ji: #{ji.inspect}"
-      g.update(ji)
+      g.update(json_input)
       render_json(g)
     end
     
