@@ -31,6 +31,10 @@ module Mouth
       self.save
     end
     
+    def destroy
+      self.class.collection.remove({"_id" => BSON::ObjectId(self.attributes[:id])})
+    end
+    
     def normalize_attributes(attrs)
       normalize = lambda do |h|
         hd = {}

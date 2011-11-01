@@ -61,6 +61,9 @@ module Mouth
     end
     
     delete '/dashboards/:id' do
+      d = Graph.find(params[:id])
+      d.destroy
+      render_json(d)
     end
     
     ##
@@ -82,6 +85,12 @@ module Mouth
       d = Graph.find(params[:id]).data
       content_type 'application/json'
       Yajl::Encoder.encode(d)
+    end
+    
+    delete '/graphs/:id' do
+      g = Graph.find(params[:id])
+      g.destroy
+      render_json(g)
     end
     
     ##
