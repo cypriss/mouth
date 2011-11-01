@@ -1,7 +1,4 @@
-
- - New current task: make a new graph
- - Also: dragging a chart around should save it
- - Clicking on a chart should flip it over
+ - New current task: make a new graph.  Once I can do this, I'll nearly be "done" with the primary code.
  
  sg = {
    :dashboard_id => d.attributes[:id],
