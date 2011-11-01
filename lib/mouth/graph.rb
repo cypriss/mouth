@@ -62,7 +62,9 @@ module Mouth
         self.attributes[a] = BSON::ObjectId(self.attributes[a])
       end
       res = yield
+      orig_attrs[:id] = self.attributes[:id]
       self.attributes = orig_attrs
+      
       res
     end
     
