@@ -61,7 +61,7 @@ module Mouth
     end
     
     delete '/dashboards/:id' do
-      d = Graph.find(params[:id])
+      d = Dashboard.find(params[:id])
       d.destroy
       render_json(d)
     end
