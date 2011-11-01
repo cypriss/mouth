@@ -12,6 +12,11 @@ module Mouth
       self.attributes.tap {|attrs| attrs[:graphs] = graphs.collect(&:all_attributes) }
     end
     
+    def destroy
+      self.graphs.each(&:destroy)
+      super
+    end
+    
     # An array of graphs
     def graphs
       @graphs ||= begin
