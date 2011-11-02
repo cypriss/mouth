@@ -36,6 +36,7 @@ body {
 
 .graph-header {
   cursor: move;
+  background-color: #FFF;
 }
 
 .graph-header .edit {
