@@ -4,6 +4,8 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
 
 require 'optparse'
 require 'mouth'
+require 'mouth/runner'
+require 'mouth/sucker'
 
 options = {
   :verbosity => 0,

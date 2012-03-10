@@ -12,7 +12,7 @@ module Mouth
     def measure(key, milli = nil)
       ms = milli || (Benchmark.realtime { yield } * 1000).to_i
 
-      write(key, ms, :ms)
+      write(key, ms, :m)
 
       ms
     end

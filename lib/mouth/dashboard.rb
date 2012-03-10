@@ -3,8 +3,6 @@ module Mouth
   # A dashboard has these fields:
   #  id
   #  name
-  #  width
-  #  height
   #  todo: order
   class Dashboard < Record
     

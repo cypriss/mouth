@@ -1,27 +1,3 @@
- - New current task: make a new graph.  Once I can do this, I'll nearly be "done" with the primary code.
- 
- sg = {
-   :dashboard_id => d.attributes[:id],
-   :position => {
-     :top => 0,
-     :left => 0,
-     :height => 7,
-     :width => 20
-   },
-   :window => 240,
-   :granularity => "minute",
-   :series => [
-     {
-       :kind => "candle",
-       :color => "blue",
-       :source => {
-         :collection => "mouth_auth",
-         :kind => "timer",
-         :key => "authentications"
-       }
-     }
-   ]
- }
  
  To make a new graph, the minimum amount of information we need:
   (dashboard id: we have this, it's the current dashboard)
@@ -29,6 +5,8 @@
   (window/granularity: leave blank!)
   Need to pick which Chart to display from a list
   Maybe choose a fucking color
+
+NEED TO MAKE SURE the collections we generate have indexes on t
 
 -----------------------------------
 
@@ -47,3 +25,51 @@ Example files for how to record metrics in various languages
 $LOAD_PATH.unshift File.expand_path(`pwd`.chomp + '/lib')
 require 'mouth/endoscope'
 Mouth.mongo = Mongo::Connection.new("localhost").db("mouth")
+
+
+In order to start the web UI:
+
+bin/mouth-endoscope -F
+
+
+Ok what do i need to do.
+
+ - Seven library
+   - Mouseover shows data values + date, ala shart
+   - subtle axis, subtle tix, 5px margin
+   - colored lines [DONE]
+   - Can drag, resize them.
+   
+   - MS chart
+     - primary line + std dev bands
+     - support missing values
+   
+   
+   
+   - Mouth graphing:
+     - v1: only 1 series per graph
+     - timing graphs maybe show a bottom activity graph?
+     
+     
+   - Future tech:
+     - Restructure the code to not remove everything when updating with new data
+     - Need to be able to shift Y scale without clobbering the graph.
+     - 
+
+Graph is:
+sg = {
+   :dashboard_id => d.attributes[:id],
+   :position => {
+     :top => 0,
+     :left => 0,
+     :height => 7,
+     :width => 20
+   },
+   :kind => 'counters' || 'timer',
+   :sources => [
+     {
+       :collection => "mouth_auth",
+       :key => "authentications"
+     }
+   ]
+ }

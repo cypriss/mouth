@@ -1,3 +1,6 @@
+require 'em-mongo'
+require 'eventmachine'
+
 module Mouth
   
   class SuckerConnection < EM::Connection
@@ -65,7 +68,7 @@ module Mouth
       
       ts = minute_timestamps
       
-      if command == "ms"
+      if command == "m"
         self.timers[ts] ||= {}
         self.timers[ts][key] ||= []
         self.timers[ts][key] << value
@@ -87,7 +90,7 @@ module Mouth
       #     poopings: 37,
       #     shittings: 3
       #   },
-      #   ms: {
+      #   m: {
       #     peeings: {...}
       #   }
       # }
@@ -116,8 +119,8 @@ module Mouth
             mongo_docs[mongo_key] ||= {}
             
             cur_mongo_doc = mongo_docs[mongo_key]
-            cur_mongo_doc["ms"] ||= {}
-            cur_mongo_doc["ms"][sub_key] = analyze_timer(values)
+            cur_mongo_doc["m"] ||= {}
+            cur_mongo_doc["m"][sub_key] = analyze_timer(values)
           end
           
           self.timers.delete(cur_ts)
@@ -165,6 +168,7 @@ module Mouth
     # parse_key("Ticket.process_new_ticket") # => ["Ticket", "process_new_ticket"]
     # parse_key("Forum List.other! crap.ok") # => ["Forum_List", "other_crap.ok"]
     # parse_key("no_namespace") # => ["default", "no_namespace"]
+    # TODO: this won't quite work.  Mongo keys can't have periods in them for obvious reasons
     def parse_key(key)
       parts = key.split(".")
       ns = nil

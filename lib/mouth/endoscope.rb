@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'erb'
-require 'mongo'
 require 'yajl'
 
 require 'mouth/record'
@@ -9,11 +8,6 @@ require 'mouth/dashboard'
 require 'mouth/stream'
 
 module Mouth
-  
-  class << self
-    attr_accessor :mongo
-  end
-  
   class Endoscope < Sinatra::Base
     
     dir = File.dirname(File.expand_path(__FILE__))
@@ -29,12 +23,16 @@ module Mouth
       erb :dashboard
     end
     
+    get '/d3' do
+      erb :d3_test
+    end
+    
     
     ##
     ## Dashboard API
     ##
     
-    # Returns all dashboards and all associated
+    # Returns all dashboards and all associated graphs.
     # If a dashboard does not exist, creates one
     get '/dashboards' do
       dashboards = Dashboard.all
@@ -82,7 +80,7 @@ module Mouth
     end
     
     get '/graphs/:id/data' do
-      d = Graph.find(params[:id]).data
+      d = Graph.find(params[:id]).data(json_input)
       content_type 'application/json'
       Yajl::Encoder.encode(d)
     end
@@ -121,10 +119,7 @@ module Mouth
     end
     
     def connect_to_mongo!
-      Mouth.mongo ||= begin
-        puts "~~~~~~~~ GETTING NEW MONGO ~~~~~~~~~"
-        Mongo::Connection.new("localhost").db("mouth")
-      end
+      #
     end
     
   end

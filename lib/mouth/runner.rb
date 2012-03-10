@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'logger'
+require 'mouth/sucker'
 
 module Mouth
   class Runner
