@@ -37,8 +37,6 @@ Ok what do i need to do.
  - Seven library
    - Mouseover shows data values + date, ala shart
    - subtle axis, subtle tix, 5px margin
-   - colored lines [DONE]
-   - Can drag, resize them.
    
    - MS chart
      - primary line + std dev bands
