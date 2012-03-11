@@ -61,7 +61,7 @@ module Mouth
       default = self.kind == :counter ? 0 : {"count" => 0, "min" => nil, "max" => nil, "mean" => nil, "sum" => 0, "median" => nil, "stddev" => nil}
       
       seq = []
-      (start_timestamp..end_timestamp).each do |t|
+      (start_timestamp...end_timestamp).each do |t|
         seq << (timestamp_to_metric[t] || default)
       end
       

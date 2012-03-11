@@ -1,53 +1,230 @@
-/* CSS RESET (from YUI most likely)*/
-html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit}input,textarea,select{*font-size:100%}legend{color:#000}
+/* reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
 
 body {
-    color: #999;
+  line-height: 1;
 }
 
-#current_dashboard {
-  border: 1px solid teal;
-  background-color: #EEE;
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+
+/* typography/_vertical_rhythm.scss */
+body {
+  font-size: 87.5%;
+  line-height: 1.571em;
+}
+
+/* typography/_vertical_rhythm.scss */
+html > body {
+  font-size: 14px;
+}
+
+body {
+  font-family: franklin-gothic-urw;
+  font-weight: 400;
+  color: #eee8d5;
+  background: #032b36;
+}
+
+/* jQuery resizeable styles */
+.ui-resizable-handle {
   position: absolute;
-/*  top: 0;*/
+  font-size: 0.1px;
+  z-index: 99999;
+  display: block;
+}
+
+.ui-resizable-e {
+  cursor: e-resize;
+  width: 7px;
+  right: -5px;
+  top: 0;
+  height: 100%;
+}
+
+.ui-resizable-s {
+  cursor: s-resize;
+  height: 7px;
+  width: 100%;
+  bottom: -5px;
+  left: 0;
+}
+
+.ui-icon-gripsmall-diagonal-se {
+  width: 16px;
+  height: 16px;
+  background-image: url(/222222_256x240_icons_icons.png);
+  background-position: -64px -224px;
+  cursor: se-resize;
+  right: 1px;
+  bottom: 1px;
+  text-indent: -99999px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
+#mouth-header {
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #241200), color-stop(50%, #331a00), color-stop(100%, #241200));
+  background-image: -webkit-linear-gradient(top center, #241200, #331a00, #241200);
+  background-image: -moz-linear-gradient(top center, #241200, #331a00, #241200);
+  background-image: -o-linear-gradient(top center, #241200, #331a00, #241200);
+  background-image: -ms-linear-gradient(top center, #241200, #331a00, #241200);
+  background-image: linear-gradient(top center, #241200, #331a00, #241200);
+  padding: 5px 20px;
+  overflow: hidden;
+  *zoom: 1;
+}
+
+#mouth-header h1 {
+  float: left;
+  font-size: 1.429em;
+  line-height: 2.2em;
+  margin-right: 20px;
+}
+
+.add-dashboard {
+  color: #f2f2f2;
+  font-size: 1.429em;
+  line-height: 2.2em;
+  text-decoration: none;
+  text-shadow: 0 1px 0 black;
+}
+
+#dashboards ul {
+  float: left;
+}
+
+.dashboard-item {
+  float: left;
+  margin-right: 20px;
+}
+
+.dashboard-item a, .dashboard-item span {
+  color: #f2f2f2;
+  font-size: 1.429em;
+  line-height: 2.2em;
+  text-decoration: none;
+  text-shadow: 0 1px 0 black;
+}
+
+#current-dashboard {
+  border-top: 1px solid black;
+  position: absolute;
+  top: 53px;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 70%;
+  -moz-box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.5);
 }
 
-#current_dashboard h2 {
-  
-  height: 20px;
-/*  background-color:red;*/
-}
-
-#current_dashboard #grid {
-  background-color: #DDD;
+#current-dashboard #grid {
   position: absolute;
-  top: 40px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
 }
 
-#current_dashboard #grid li {
-  position: absolute;
+#current-dashboard #grid li {
+  padding: 4px;
+  background: white;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .graph-header {
   cursor: move;
-  background-color: #FFF;
+  color: #330000;
+  font-weight: 700;
+  font-size: 0.786em;
+  line-height: 2em;
 }
 
 .graph-header .edit {
   cursor: default;
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  text-decoration: none;
+  color: #222222;
 }
 
 .graph-body {
   overflow: hidden;
+  position: absolute;
+  color: black;
+  top: 25px;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .graph-back {
-  background-color: teal;
+  background-color: white;
+}
+
+.add-graph {
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  text-decoration: none;
+  color: white;
 }

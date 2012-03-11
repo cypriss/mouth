@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'erb'
 require 'yajl'
 
+require 'mouth/sequence'
 require 'mouth/record'
 require 'mouth/graph'
 require 'mouth/dashboard'
@@ -81,7 +82,7 @@ module Mouth
     
     get '/graphs/:id/data' do
       # TODO: I need to transform json_input's start_time and end_time into Time objects
-      d = Graph.find(params[:id]).data(json_input)
+      d = Graph.find(params[:id]).data
       content_type 'application/json'
       Yajl::Encoder.encode(d)
     end
