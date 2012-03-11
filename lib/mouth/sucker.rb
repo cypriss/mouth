@@ -63,7 +63,7 @@ module Mouth
     
     def store!(data)
       command, key, value = data.split(":")
-      key = sanitize_key(key)
+      key = Mouth.sanitize_key(key)
       value = value.to_f
       
       ts = minute_timestamps
@@ -87,18 +87,18 @@ module Mouth
       # We're going to construct mongo_docs which look like this:
       # "mycollections:234234": {  # NOTE: this timpstamp will be popped into .t = 234234
       #   c: {
-      #     poopings: 37,
-      #     shittings: 3
+      #     happenings: 37,
+      #     affairs: 3
       #   },
       #   m: {
-      #     peeings: {...}
+      #     occasions: {...}
       #   }
       # }
       
       self.counters.each do |cur_ts, counters_to_save|
         if cur_ts <= limit_ts
           counters_to_save.each do |counter_key, value|
-            ns, sub_key = parse_key(counter_key)
+            ns, sub_key = Mouth.parse_key(counter_key)
             mongo_key = "#{ns}:#{ts}"
             mongo_docs[mongo_key] ||= {}
             
@@ -114,7 +114,7 @@ module Mouth
       self.timers.each do |cur_ts, timers_to_save|
         if cur_ts <= limit_ts
           timers_to_save.each do |timer_key, values|
-            ns, sub_key = parse_key(timer_key)
+            ns, sub_key = Mouth.parse_key(timer_key)
             mongo_key = "#{ns}:#{ts}"
             mongo_docs[mongo_key] ||= {}
             
@@ -156,32 +156,6 @@ module Mouth
     
     def minute_timestamps
       Time.now.to_i / 60
-    end
-    
-    def sanitize_key(key)
-      key.gsub(/\s+/, '_').gsub(/\//, '-').gsub(/[^a-zA-Z_\-0-9\.]/, '')
-    end
-    
-    # Parses a key into two parts: namespace, and key.  Also sanitizes each field
-    # Returns an array of values: [namespace, key]
-    # eg,
-    # parse_key("Ticket.process_new_ticket") # => ["Ticket", "process_new_ticket"]
-    # parse_key("Forum List.other! crap.ok") # => ["Forum_List", "other_crap.ok"]
-    # parse_key("no_namespace") # => ["default", "no_namespace"]
-    # TODO: this won't quite work.  Mongo keys can't have periods in them for obvious reasons
-    def parse_key(key)
-      parts = key.split(".")
-      ns = nil
-      sub_key = nil
-      if parts.length > 1
-        ns = parts.shift
-        sub_key = parts.join(".")
-      else
-        ns = "default"
-        sub_key = parts.shift
-      end
-      
-      [sanitize_key(ns), sanitize_key(sub_key)]
     end
     
     def analyze_timer(values)

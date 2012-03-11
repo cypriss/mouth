@@ -1,5 +1,5 @@
 module Mouth
-  class Stream
+  class Source
     
     attr_accessor :all_attributes
     
@@ -8,14 +8,17 @@ module Mouth
     end
     
     # Returns an array of tuples:
-    # [{collection: "mouth_auth", kind: "counter|timer", key: "inline_logged_in"}, ...]
+    # [{source: "auth.inline_logged_in", kind: "counter|timer"}, ...]
     def self.all
-      collections = Mouth.mongo.collections.collect(&:name) - %w(dashboards graphs system.indexes)
+      col_names = Mouth.mongo.collections.collect(&:name) - %w(dashboards graphs system.indexes)
+      col_names.select! {|c| c =~ /^mouth_/ }
+      
       tuples = []
-      collections.each do |col|
-        counters, timers = all_for_collection(Mouth.mongo.collection(col))
-        counters.each {|key| tuples << {:collection => col, :kind => "counter", :key => key} }
-        timers.each {|key| tuples << {:collection => col, :kind => "timer", :key => key} }
+      col_names.each do |col_name|
+        namespace = col_name.match(/mouth_(.+)/)[1]
+        counters, timers = all_for_collection(Mouth.collection(col_name))
+        counters.each {|s| tuples << {:source => "#{namespace}.#{s}", :kind => "counter"} }
+        timers.each {|s| tuples << {:source => "#{namespace}.#{s}", :kind => "timer"} }
       end
       tuples.collect {|t| new(t) }
     end
@@ -29,7 +32,7 @@ module Mouth
             vh[k] = true;
             emit("counters", {ks: vh});
           }
-          for (k in this.ms) {
+          for (k in this.m) {
             vh = {};
             vh[k] = true;
             emit("timers", {ks: vh});

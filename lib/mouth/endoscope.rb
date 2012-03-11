@@ -5,7 +5,7 @@ require 'yajl'
 require 'mouth/record'
 require 'mouth/graph'
 require 'mouth/dashboard'
-require 'mouth/stream'
+require 'mouth/source'
 
 module Mouth
   class Endoscope < Sinatra::Base
@@ -37,7 +37,7 @@ module Mouth
     get '/dashboards' do
       dashboards = Dashboard.all
       if dashboards.length == 0
-        dashboards = [Dashboard.create(:name => "Main", :height => 100, :width => 100)]
+        dashboards = [Dashboard.create(:name => "Main")]
       end
       
       render_json(dashboards)
@@ -80,6 +80,7 @@ module Mouth
     end
     
     get '/graphs/:id/data' do
+      # TODO: I need to transform json_input's start_time and end_time into Time objects
       d = Graph.find(params[:id]).data(json_input)
       content_type 'application/json'
       Yajl::Encoder.encode(d)
@@ -95,8 +96,8 @@ module Mouth
     ## Data
     ##
     
-    get '/streams' do
-      s = Stream.all
+    get '/sources' do
+      s = Source.all
       render_json(s)
     end
     
