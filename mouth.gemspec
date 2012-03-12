@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'em-mongo', '~> 0.4'       # For the EM collector
   s.add_runtime_dependency 'mongo', '~> 1.4'          # For the sinatra app
+  s.add_runtime_dependency 'bson_ext', '~> 1.4'
   s.add_runtime_dependency 'eventmachine', '~> 0.12.10'
   s.add_runtime_dependency 'vegas', '~> 0.1.8'
   s.add_runtime_dependency 'sinatra', '~> 1.3.1'

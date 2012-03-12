@@ -6,4 +6,8 @@ require 'vegas'
 require 'mouth'
 require 'mouth/endoscope'
 
-Vegas::Runner.new(Mouth::Endoscope, 'mouth-endoscope')
+Vegas::Runner.new(Mouth::Endoscope, 'mouth-endoscope') do |runner, opts, app|
+  opts.on("--mongohost HOSTPORT", "STORE SUCKINGS IN THIS MONGO") do |mongo_host|
+    Mouth.mongo_host = mongo_host
+  end
+end
