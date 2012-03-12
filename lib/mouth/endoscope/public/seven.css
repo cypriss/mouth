@@ -44,3 +44,7 @@ path {
     -o-box-shadow: 1px 0 0 rgba(255, 255, 255, 0.4);
     box-shadow: 1px 0 0 rgba(255, 255, 255, 0.4);
 }
+
+.seven .novalue {
+    display: none;
+}
