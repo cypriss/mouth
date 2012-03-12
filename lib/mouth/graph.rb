@@ -26,7 +26,15 @@ module Mouth
     #  - :granularity
     def data(opts = {})
       sources = self.attributes[:sources] || []
-      sources.collect {|s| Sequence.new(s, {:kind => self.attributes[:kind].to_sym}.merge(opts)).sequence }
+      seq_opts = {:kind => self.attributes[:kind].to_sym}.merge(opts)
+      sources.collect do |s|
+        seq = Sequence.new(s, seq_opts)
+        {
+          :data => data = seq.sequence,
+          :start_time => seq.start_time_epoch,
+          :source => s
+        }
+      end
     end
     
     #

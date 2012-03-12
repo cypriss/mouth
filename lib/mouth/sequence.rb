@@ -22,7 +22,7 @@ module Mouth
       opts = {
         :kind => :counter,
         :granularity => :minute,
-        :start_time => Time.now - (120 * 60),
+        :start_time => Time.now - (119 * 60),
         :end_time => Time.now,
       }.merge(opts)
       
@@ -36,6 +36,10 @@ module Mouth
     def sequence
       return sequence_for_minute if self.granularity == :minute
       raise Exception.new "Not implemented"
+    end
+    
+    def start_time_epoch
+      (self.start_time.to_i / 60) * 60
     end
     
     def time_sequence
@@ -61,7 +65,7 @@ module Mouth
       default = self.kind == :counter ? 0 : {"count" => 0, "min" => nil, "max" => nil, "mean" => nil, "sum" => 0, "median" => nil, "stddev" => nil}
       
       seq = []
-      (start_timestamp...end_timestamp).each do |t|
+      (start_timestamp..end_timestamp).each do |t|
         seq << (timestamp_to_metric[t] || default)
       end
       

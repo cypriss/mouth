@@ -68,7 +68,7 @@ html > body {
 }
 
 body {
-  font-family: franklin-gothic-urw;
+  font-family: helvetica;
   font-weight: 400;
   color: #eee8d5;
   background: #032b36;
@@ -174,7 +174,7 @@ body {
   height: 100%;
 }
 
-#current-dashboard #grid li {
+#current-dashboard #grid > li {
   padding: 4px;
   background: white;
   -moz-border-radius: 4px;
