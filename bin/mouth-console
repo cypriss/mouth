@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+# Running bin/mouth-console will put you in an IRB session with the mouth files loaded.  Convenient for development and experimentation.
+
+require 'irb'
+require 'irb/completion'
+
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
+
+require 'mouth'
+require 'mouth/sequence'
+require 'mouth/record'
+require 'mouth/graph'
+require 'mouth/dashboard'
+require 'mouth/source'
+
+IRB.start
