@@ -1,3 +1,8 @@
+
+Make mouth set procline with # of udp packets it has received
+Build in some mechanisms to diagnose mongo connection issues
+
+
  
  To make a new graph, the minimum amount of information we need:
   (dashboard id: we have this, it's the current dashboard)

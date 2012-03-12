@@ -63,7 +63,7 @@ module Mouth
     
     def store!(data)
       command, key, value = data.split(":")
-      key = Mouth.sanitize_key(key)
+      key = Mouth.parse_key(key).join(".")
       value = value.to_f
       
       ts = minute_timestamps
