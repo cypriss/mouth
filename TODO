@@ -1,78 +1,21 @@
 
-Make mouth set procline with # of udp packets it has received
-Build in some mechanisms to diagnose mongo connection issues
 
-
- 
- To make a new graph, the minimum amount of information we need:
-  (dashboard id: we have this, it's the current dashboard)
-  (position: let's just position it automatically)
-  (window/granularity: leave blank!)
-  Need to pick which Chart to display from a list
-  Maybe choose a fucking color
-
-NEED TO MAKE SURE the collections we generate have indexes on t
-
------------------------------------
-
--K option to kill previous running version
-
-Config file to read mongo info from
-
-Great readme
-
-Update -h options to display helpful information
-
-Example files for how to record metrics in various languages
- - Ruby, php, python, .NET
-
-
-$LOAD_PATH.unshift File.expand_path(`pwd`.chomp + '/lib')
-require 'mouth/endoscope'
-Mouth.mongo = Mongo::Connection.new("localhost").db("mouth")
-
-
-In order to start the web UI:
-
-bin/mouth-endoscope -F
-
-
-Ok what do i need to do.
-
- - Seven library
-   - Mouseover shows data values + date, ala shart
-   - subtle axis, subtle tix, 5px margin
-   
-   - MS chart
-     - primary line + std dev bands
-     - support missing values
-   
-   
-   
-   - Mouth graphing:
-     - v1: only 1 series per graph
-     - timing graphs maybe show a bottom activity graph?
-     
-     
-   - Future tech:
-     - Restructure the code to not remove everything when updating with new data
-     - Need to be able to shift Y scale without clobbering the graph.
-     - 
-
-Graph is:
-sg = {
-   :dashboard_id => d.attributes[:id],
-   :position => {
-     :top => 0,
-     :left => 0,
-     :height => 7,
-     :width => 20
-   },
-   :kind => 'counters' || 'timer',
-   :sources => [
-     {
-       :collection => "mouth_auth",
-       :key => "authentications"
-     }
-   ]
- }
+ - Add Graph should popup sources, not create a graph immediately
+   - V1: scrollable, click-to-add
+   - V2: autofilter, keyboard navigation
+ - Back of card: add multiple sources to counters, delete counters.  Change timer.
+ - Dashboard management: click to change, click again to edit.  Delete link asks for confirmation.
+ - Make mouth set procline with # of udp packets it has received
+ - Build in some mechanisms to diagnose mongo connection issues
+ - NEED TO MAKE SURE the collections we generate have indexes on them
+ - -K option to kill previous running version
+ - Investigate vegas for my runner -- Why not
+   - or, -K option to kill previous running version
+ - Great readme
+ -  Example files for how to record metrics in various languages
+   - Ruby, php, python, .NET
+   - mouth-instrument
+ - statsd instrument compatibility
+ - Add in the *option* (somehow) to display times in current time zone OR UTC
+ - Periodically update dashboard with more info
+ - Restructure charting code to not remove everything when updating with new data
