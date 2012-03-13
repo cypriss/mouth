@@ -11,23 +11,41 @@ path {
     background: -o-linear-gradient(top, #62769b 0%, #2e3a4f 35%, #2e3a4f 65%, #212a3d 100%);
     background: -ms-linear-gradient(top, #62769b 0%, #2e3a4f 35%, #2e3a4f 65%, #212a3d 100%);
     background: linear-gradient(top, #62769b 0%, #2e3a4f 35%, #2e3a4f 65%, #212a3d 100%);
-    width: 200px;
-    min-height: 50px;
+    
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+
+    width: 120px;
     top: 0;
     left: 0;
+    padding: 2px;
+    
+    font-family: sans-serif;
+    font-size: 11px;
+    line-height: 12px;
+    
 }
 
 .seven-tip-inner {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    bottom: 2px;
-    right: 2px;
     background-color: #FFF;
+    border-radius: 2px 2px 2px 2px;
 }
 
 .seven-tip .seven-tip-time {
-    
+    background-color: #F3F6FA;
+    padding: 4px;
+}
+
+.seven-tip li {
+    padding: 2px 4px;   
+}
+
+.seven-tip .color {
+    display: inline-block;
+    height: 12px;
+    margin-right: 4px;
+    vertical-align: text-top;
+    width: 12px;
 }
 
 .seven-scrubber {
