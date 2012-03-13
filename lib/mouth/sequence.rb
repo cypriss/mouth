@@ -60,7 +60,11 @@ module Mouth
       
       entries = collection.find({"t" => {"$gte" => start_timestamp, "$lte" => end_timestamp}}).sort("t", 1).to_a
       
-      timestamp_to_metric = entries.inject({}) {|h, e| h[e["t"]] = e[self.kind == :counter ? "c" : "m"][metric]; h }
+      timestamp_to_metric = entries.inject({}) do |h, e|
+        container = e[self.kind == :counter ? "c" : "m"]
+        h[e["t"]] = container && container[metric]
+        h
+      end
       
       default = self.kind == :counter ? 0 : {"count" => 0, "min" => nil, "max" => nil, "mean" => nil, "sum" => 0, "median" => nil, "stddev" => nil}
       
