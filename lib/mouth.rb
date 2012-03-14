@@ -27,8 +27,12 @@ module Mouth
       "mouth_#{namespace}"
     end
     
-    def sanitize_key(key)
-      key.gsub(/\s+/, '_').gsub(/[^a-zA-Z\\_\-0-9:]/, '')
+    def sanitize_namespace(key)
+      key.gsub(/\s+/, '_').gsub(/\//, '-').gsub(/[^a-zA-Z_\-0-9]/, '')
+    end
+    
+    def sanitize_metric(key)
+      key.gsub(/\s+/, '_').gsub(/[^a-zA-Z0-9\-_\\:]/, '')
     end
     
     # Parses a key into two parts: namespace, and metric.  Also sanitizes each field
@@ -49,7 +53,7 @@ module Mouth
         metric = parts.shift
       end
       
-      [sanitize_key(namespace), sanitize_key(metric)]
+      [sanitize_namespace(namespace), sanitize_metric(metric)]
     end 
     
 

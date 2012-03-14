@@ -11,7 +11,7 @@ module Mouth
     # [{source: "auth.inline_logged_in", kind: "counter|timer"}, ...]
     def self.all
       col_names = Mouth.mongo.collections.collect(&:name) - %w(dashboards graphs system.indexes)
-      col_names.select! {|c| c =~ /^mouth_/ }
+      col_names.select! {|c| c =~ /^mouth_.+/ }
       
       tuples = []
       col_names.each do |col_name|
