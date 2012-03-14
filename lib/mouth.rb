@@ -28,7 +28,7 @@ module Mouth
     end
     
     def sanitize_key(key)
-      key.gsub(/\s+/, '_').gsub(/\//, '-').gsub(/[^a-zA-Z_\-0-9]/, '')
+      key.gsub(/\s+/, '_').gsub(/[^a-zA-Z\\_\-0-9:]/, '')
     end
     
     # Parses a key into two parts: namespace, and metric.  Also sanitizes each field
