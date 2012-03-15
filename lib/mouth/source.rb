@@ -20,7 +20,8 @@ module Mouth
         counters.each {|s| tuples << {:source => "#{namespace}.#{s}", :kind => "counter"} }
         timers.each {|s| tuples << {:source => "#{namespace}.#{s}", :kind => "timer"} }
       end
-      tuples.collect {|t| new(t) }
+      
+      tuples.sort_by {|t| "#{t[:kind]}#{t[:source]}" }.collect {|t| new(t) }
     end
     
     def self.all_for_collection(col, window = Time.now.to_i / 60 - 9880)
