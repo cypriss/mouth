@@ -8,7 +8,6 @@
  - Make mouth set procline with # of udp packets it has received
  - Build in some mechanisms to diagnose mongo connection issues
  - NEED TO MAKE SURE the collections we generate have indexes on them
- - -K option to kill previous running version
  - Investigate vegas for my runner -- Why not
    - or, -K option to kill previous running version
  - Great readme
