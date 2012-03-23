@@ -21,6 +21,8 @@ module Mouth
     end
     
     def run!
+      kill! if self.options[:kill]
+      
       daemonize!
       save_pid!
       setup_logging!
@@ -28,6 +30,18 @@ module Mouth
       # Start the reactor!
       sucker = Mouth::Sucker.new(self.options)
       sucker.suck!
+    end
+    
+    def kill!
+      if @pid_file
+        pid = File.read(@pid_file)
+        #logger.warn "Sending #{kill_command} to #{pid.to_i}"
+        Process.kill(:INT, pid.to_i)
+      else
+        #logger.warn "No pid_file specified"
+      end
+    ensure
+      exit(0)
     end
     
     def daemonize!
@@ -40,7 +54,7 @@ module Mouth
       File.umask(0000)
       
       # Set the procline
-      $0 = "mouth"
+      $0 = "mouth [initializing]"
     end
     
     def save_pid!
