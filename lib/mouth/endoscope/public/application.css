@@ -231,3 +231,84 @@ body {
   text-decoration: none;
   color: white;
 }
+
+.source-list {
+  display: block;
+  position: absolute;
+  top: 0px;
+  width: 40%;
+  min-height: 200px;
+  background-color: blue;
+  color: #555;
+}
+
+.source-list.left {
+  left: 0;
+}
+.source-list.right {
+  right: 0;
+}
+
+.source-list .head {
+    background-color: red;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 4px;
+    height: 56px;
+}
+
+.source-list .head  h2 {
+    background-color:yellow;
+}
+
+
+.source-list .head input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    color: #555555;
+    display: inline-block;
+    font-size: 13px;
+    height: 26px;
+    line-height: 18px;
+    padding: 4px;
+    width: 100%;
+}
+
+.source-list ul {
+    overflow-y: auto;
+    position: absolute;
+    background-color: green;
+    width: 100%;
+    top: 56px;
+    bottom: 30px;
+}
+
+.source-list ul .source-item {
+    padding: 2px;
+    background-color: #EFE;
+}
+
+.source-list .foot {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 30px;
+    background-color: cyan;
+    padding: 4px;
+}
+
+.source-list .foot a {
+    float: left;
+}
+
+.source-list .foot button {
+    float: right;
+}
