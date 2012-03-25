@@ -1,12 +1,21 @@
 
-
- - Add Graph should popup sources, not create a graph immediately
-   - V1: scrollable, click-to-add
-   - V2: autofilter, keyboard navigation
- - Back of card: add multiple sources to counters, delete counters.  Change timer.
+V1
+ - Style back of card
+ - When picker is open, the current graph should be highlighted
+ - when you open the picker, it should go to the right/left side based on loc of graph
+ - Graph title should change if multiple counters are selected
+ ------
  - Dashboard management: click to change, click again to edit.  Delete link asks for confirmation.
+ ------
+ - Auto-update of data
+ ------
+ - Re implement graph autoplacement
+ ------
+ - Figure out how dashboards can scroll
+ ------
+ - better backend impl of source list
+ - Figure out how clicking on different dashboards changes the URL, maybe using push state?
  - Make mouth set procline with # of udp packets it has received
- - Build in some mechanisms to diagnose mongo connection issues
  - NEED TO MAKE SURE the collections we generate have indexes on them
  - Investigate vegas for my runner -- Why not
    - or, -K option to kill previous running version
@@ -16,5 +25,28 @@
    - mouth-instrument
  - statsd instrument compatibility
  - Add in the *option* (somehow) to display times in current time zone OR UTC
- - Periodically update dashboard with more info
  - Restructure charting code to not remove everything when updating with new data
+
+V2
+ - Select time ranges, and aggregate into 15-minute chunks
+ - Show period averages / rates
+ - Source picker textbox filter
+ - Full keyboard navigation
+ - Build in some mechanisms to diagnose mongo connection issues
+ - source picker should show a little sparkline or some sense of how old the data is
+ - Auto refreshing source list (every minute?)
+ - Manual refresh source list icon
+ 
+Someday
+ - Plugin system
+   - 'Dashboards' should be a module
+   - 'Explorer' module
+   - 'Monitor' module
+
+Bugs:
+ - Sometimes the graph becomes un-resizable
+ - When picker is open, changing dashboards should hide picker
+ - tooltip spawns multiple copies on large datasets
+
+Refactorings:
+ - reconcile naming of 'sources' sometimes being array of strings and sometimes array of objects

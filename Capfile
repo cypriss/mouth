@@ -18,8 +18,9 @@ task :omg do
     upload file, loc
     sudo "gem install #{loc}"
     run "mouth-endoscope -K"
-    run "mouth-endoscope --mongohost 10.36.103.70"
     run "mouth --pidfile #{home}/mouth.pid -K"
+    run "sleep 5"
+    run "mouth-endoscope --mongohost 10.36.103.70"
     run "mouth --pidfile #{home}/mouth.pid --logfile #{home}/mouth.log -H 10.18.23.135 -P 8889 --mongohost 10.36.103.70"
   end
 end

@@ -234,12 +234,16 @@ body {
 }
 
 .source-list {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 2px solid #212a3d;
   display: block;
   position: absolute;
   top: 0px;
   width: 40%;
   min-height: 200px;
-  background-color: blue;
+  background-color: white;
   color: #555;
 }
 
@@ -251,17 +255,27 @@ body {
 }
 
 .source-list .head {
-    background-color: red;
     position: relative;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 4px;
-    height: 56px;
+    height: 26px;
 }
 
 .source-list .head  h2 {
-    background-color:yellow;
+
+}
+
+.source-list a.cancel {
+    display: block;
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    padding-right: 4px;
+    text-align: right;
+    top: 0;
+    right: 0;
 }
 
 
@@ -283,15 +297,26 @@ body {
 .source-list ul {
     overflow-y: auto;
     position: absolute;
-    background-color: green;
     width: 100%;
-    top: 56px;
+    top: 26px;
     bottom: 30px;
 }
 
 .source-list ul .source-item {
     padding: 2px;
-    background-color: #EFE;
+}
+
+.source-list ul .source-item.no-data {
+    padding: 6px;
+    color: #CCC;
+}
+
+
+.source-list ul label {
+    display: block;
+}
+.source-list ul label:hover {
+    background-color: #DDF;
 }
 
 .source-list .foot {
@@ -302,12 +327,7 @@ body {
     bottom: 0px;
     width: 100%;
     height: 30px;
-    background-color: cyan;
     padding: 4px;
-}
-
-.source-list .foot a {
-    float: left;
 }
 
 .source-list .foot button {
