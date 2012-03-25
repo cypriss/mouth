@@ -70,7 +70,7 @@ html > body {
 body {
   font-family: sans-serif;
   font-weight: 400;
-  color: #eee8d5;
+  color: #555;
   background: #032b36;
 }
 
@@ -118,6 +118,7 @@ body {
   background-image: -o-linear-gradient(top center, #241200, #331a00, #241200);
   background-image: -ms-linear-gradient(top center, #241200, #331a00, #241200);
   background-image: linear-gradient(top center, #241200, #331a00, #241200);
+  color: #eee8d5;
   padding: 5px 20px;
   overflow: hidden;
   *zoom: 1;
@@ -229,7 +230,7 @@ body {
   bottom: 10px;
   right: 10px;
   text-decoration: none;
-  color: white;
+  color: #eee8d5;;
 }
 
 .source-list {
