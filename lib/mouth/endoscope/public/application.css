@@ -199,6 +199,10 @@ body {
     color: #EEE8D5;
 }
 
+.dashboard-item .chooser {
+    cursor:pointer;
+}
+
 #current-dashboard {
   border-top: 1px solid black;
   position: absolute;
