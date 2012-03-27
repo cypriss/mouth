@@ -120,7 +120,7 @@ body {
   background-image: linear-gradient(top center, #241200, #331a00, #241200);
   color: #eee8d5;
   padding: 5px 20px;
-  overflow: hidden;
+/*  overflow: hidden;*/
   *zoom: 1;
 }
 
@@ -148,12 +148,55 @@ body {
   margin-right: 20px;
 }
 
+.dashboard-item-edit {
+    background-color: white;
+    border: 2px solid #212a3d;
+    position: relative;
+    height: 45px;
+    z-index: 3;
+    padding: 5px;
+    color: #555;
+}
+
+.dashboard-item-edit input {
+  border: 1px solid #CCCCCC;
+  border-radius: 3px 3px 3px 3px;
+  color: #555555;
+  display: inline-block;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.dashboard-item-edit .delete {
+    position:absolute;
+    height: 15px;
+    right: 3px;
+    bottom: 0px;
+    font-size: 11px;
+    line-height: 11px;
+    color: #222222;
+    text-decoration: underline;
+    text-shadow: none;
+}
+
+.dashboard-item-edit .cancel {
+    font-size: 12px;
+    line-height: 12px;
+    color: #222222;
+    text-decoration: underline;
+    text-shadow: none;
+}
+
 .dashboard-item a, .dashboard-item span {
   color: #f2f2f2;
   font-size: 1.429em;
   line-height: 2.2em;
   text-decoration: none;
   text-shadow: 0 1px 0 black;
+}
+
+.dashboard-item.selected span {
+    color: #EEE8D5;
 }
 
 #current-dashboard {

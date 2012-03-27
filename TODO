@@ -1,10 +1,5 @@
 
 V1
- - Style back of card
- - When picker is open, the current graph should be highlighted
- - when you open the picker, it should go to the right/left side based on loc of graph
- - Graph title should change if multiple counters are selected
- ------
  - Dashboard management: click to change, click again to edit.  Delete link asks for confirmation.
  ------
  - Auto-update of data
@@ -36,15 +31,17 @@ V2
  - source picker should show a little sparkline or some sense of how old the data is
  - Auto refreshing source list (every minute?)
  - Manual refresh source list icon
- 
+
 Someday
+ - Picker:
+   - When you re-pick sources, it should scroll to the existing picked items
+   - Selected rows should also be highlighted in addition to checked
  - Plugin system
    - 'Dashboards' should be a module
    - 'Explorer' module
    - 'Monitor' module
 
 Bugs:
- - Sometimes the graph becomes un-resizable
  - When picker is open, changing dashboards should hide picker
  - tooltip spawns multiple copies on large datasets
 
