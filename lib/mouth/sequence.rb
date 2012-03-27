@@ -54,11 +54,11 @@ module Mouth
     def sequence_for_minute
       namespace, metric = Mouth.parse_key(self.key)
       collection = Mouth.collection(Mouth.mongo_collection_name(namespace))
-      
+      kind_letter = self.kind == :counter ? "c" : "m"
       start_timestamp = self.start_time.to_i / 60
       end_timestamp = self.end_time.to_i / 60
       
-      entries = collection.find({"t" => {"$gte" => start_timestamp, "$lte" => end_timestamp}}).sort("t", 1).to_a
+      entries = collection.find({"t" => {"$gte" => start_timestamp, "$lte" => end_timestamp}}, :fields => ["t", "#{kind_letter}.#{metric}"]).sort("t", 1).to_a
       
       timestamp_to_metric = entries.inject({}) do |h, e|
         container = e[self.kind == :counter ? "c" : "m"]
