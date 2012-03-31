@@ -1,24 +1,26 @@
 module Mouth
   
   # Usage: 
-  # Sequence.new("namespace.foobar_occurances").sequence
-  # # => [4, 9, 0, ...]
+  # Sequence.new(["namespace.foobar_occurances"]).sequences
+  # # => {"foobar_occurances" => [4, 9, 0, ...]}
   #
-  # Sequence.new("namespace.foobar_occurances", :kind => :timer).sequence
-  # # => [{:count => 3, :min => 1, ...}, ...]
+  # Sequence.new(["namespace.foobar_occurances", "namespace.baz"], :kind => :timer).sequences
+  # # => {"foobar_occurances" => [{:count => 3, :min => 1, ...}, ...], "baz" => [...]}
   #
   # s = Sequence.new(...)
   # s.time_sequence
   # # => [Time.new(first datapoint), Time.new(second datapoint), ..., Time.new(last datapoint)]
   class Sequence
     
-    attr_accessor :key
+    attr_accessor :keys
     attr_accessor :kind
     attr_accessor :granularity
     attr_accessor :start_time
     attr_accessor :end_time
+    attr_accessor :namespace
+    attr_accessor :metrics
     
-    def initialize(key, opts = {})
+    def initialize(keys, opts = {})
       opts = {
         :kind => :counter,
         :granularity => :minute,
@@ -26,15 +28,25 @@ module Mouth
         :end_time => Time.now,
       }.merge(opts)
       
-      self.key = key
+      self.keys = Array(keys)
       self.kind = opts[:kind]
       self.granularity = opts[:granularity]
       self.start_time = opts[:start_time]
       self.end_time = opts[:end_time]
+      
+      self.metrics = []
+      namespaces = []
+      self.keys.each do |k|
+        namespace, metric = Mouth.parse_key(k)
+        namespaces << namespace
+        self.metrics << metric
+      end
+      raise StandardError.new("Batch calculation must come from the same namespace") if namespaces.uniq.length > 1
+      self.namespace = namespaces.first
     end
     
-    def sequence
-      return sequence_for_minute if self.granularity == :minute
+    def sequences
+      return sequences_for_minute if self.granularity == :minute
       raise Exception.new "Not implemented"
     end
     
@@ -51,29 +63,33 @@ module Mouth
     
     protected
     
-    def sequence_for_minute
-      namespace, metric = Mouth.parse_key(self.key)
-      collection = Mouth.collection(Mouth.mongo_collection_name(namespace))
+    def sequences_for_minute
+      collection = Mouth.collection(Mouth.mongo_collection_name(self.namespace))
       kind_letter = self.kind == :counter ? "c" : "m"
       start_timestamp = self.start_time.to_i / 60
       end_timestamp = self.end_time.to_i / 60
       
-      entries = collection.find({"t" => {"$gte" => start_timestamp, "$lte" => end_timestamp}}, :fields => ["t", "#{kind_letter}.#{metric}"]).sort("t", 1).to_a
+      fields = ["t"].concat(self.metrics.map {|m| "#{kind_letter}.#{m}" })
+      entries = collection.find({"t" => {"$gte" => start_timestamp, "$lte" => end_timestamp}}, :fields => fields).to_a
       
-      timestamp_to_metric = entries.inject({}) do |h, e|
-        container = e[self.kind == :counter ? "c" : "m"]
-        h[e["t"]] = container && container[metric]
+      timestamp_to_metrics = entries.inject({}) do |h, e|
+        h[e["t"]] = e[kind_letter]
         h
       end
       
       default = self.kind == :counter ? 0 : {"count" => 0, "min" => nil, "max" => nil, "mean" => nil, "sum" => 0, "median" => nil, "stddev" => nil}
       
-      seq = []
-      (start_timestamp..end_timestamp).each do |t|
-        seq << (timestamp_to_metric[t] || default)
+      seqs = {}
+      self.metrics.each do |m|
+        seq = []
+        (start_timestamp..end_timestamp).each do |t|
+          mets = timestamp_to_metrics[t]
+          seq << ((mets && mets[m]) || default)
+        end
+        seqs[m] = seq
       end
       
-      seq
+      seqs
     end
     
     public
@@ -107,7 +123,7 @@ module Mouth
         }
         
         # Insert the document into mongo
-        Mouth.collection(collection_name).insert({"t" => t, "c" => {opts[:metric] => counter}, "m" => {opts[:metric] => m_doc}})
+        Mouth.collection(collection_name).update({"t" => t}, {"$set" => {"c.#{opts[:metric]}" => counter, "m.#{opts[:metric]}" => m_doc}}, :upsert => true)
         
         # Update counter randomly
         counter += rand(10) - 5

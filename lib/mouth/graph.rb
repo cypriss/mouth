@@ -27,12 +27,13 @@ module Mouth
     def data(opts = {})
       sources = self.attributes[:sources] || []
       seq_opts = {:kind => self.attributes[:kind].to_sym}.merge(opts)
-      sources.collect do |s|
-        seq = Sequence.new(s, seq_opts)
+      sequence = Sequence.new(sources, seq_opts)
+      seqs = sequence.sequences
+      seqs.map do |seq|
         {
-          :data => data = seq.sequence,
-          :start_time => seq.start_time_epoch,
-          :source => s
+          :data => seq[1],
+          :start_time => sequence.start_time_epoch,
+          :source => seq[0]
         }
       end
     end

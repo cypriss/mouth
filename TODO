@@ -1,7 +1,5 @@
 
 V1
- - Dashboard management: click to change, click again to edit.  Delete link asks for confirmation.
- ------
  - Auto-update of data
  ------
  - Re implement graph autoplacement
@@ -20,22 +18,24 @@ V1
    - mouth-instrument
  - statsd instrument compatibility
  - Add in the *option* (somehow) to display times in current time zone OR UTC
- - Restructure charting code to not remove everything when updating with new data
+ 
 
 V2
  - Select time ranges, and aggregate into 15-minute chunks
  - Show period averages / rates
- - Source picker textbox filter
  - Full keyboard navigation
  - Build in some mechanisms to diagnose mongo connection issues
- - source picker should show a little sparkline or some sense of how old the data is
  - Auto refreshing source list (every minute?)
- - Manual refresh source list icon
 
 Someday
  - Picker:
    - When you re-pick sources, it should scroll to the existing picked items
    - Selected rows should also be highlighted in addition to checked
+   - should show a little sparkline or some sense of how old the data is
+   - Source picker textbox filter
+   - Manual refresh source list icon
+ - Graphing
+   - Restructure charting code to not remove everything when updating with new data
  - Plugin system
    - 'Dashboards' should be a module
    - 'Explorer' module
