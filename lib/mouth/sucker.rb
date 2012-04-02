@@ -138,11 +138,7 @@ module Mouth
         collection_name = "mouth_#{ns}"
         doc["t"] = ts.to_i
         
-        col = self.mongo_db.collection(collection_name)
-        col.insert(doc)
-        Mouth.logger.info "Inserted"
-        col.ensure_index([["t", 1]], {:background => true, :unique => true})
-        Mouth.logger.info "Ensured Index"
+        self.mongo_db.collection(collection_name).insert(doc)
       end
     end
     
