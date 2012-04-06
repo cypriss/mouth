@@ -10,8 +10,6 @@ V1
  - Figure out how clicking on different dashboards changes the URL, maybe using push state?
  - Make mouth set procline with # of udp packets it has received
  - NEED TO MAKE SURE the collections we generate have indexes on them
- - Investigate vegas for my runner -- Why not
-   - or, -K option to kill previous running version
  - Great readme
  -  Example files for how to record metrics in various languages
    - Ruby, php, python, .NET
@@ -26,6 +24,7 @@ V2
  - Full keyboard navigation
  - Build in some mechanisms to diagnose mongo connection issues
  - Auto refreshing source list (every minute?)
+ - Tests
 
 Someday
  - Picker:
