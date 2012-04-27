@@ -16,10 +16,6 @@ module Mouth
     set :views, "#{dir}/endoscope/views"
     set :public_folder, "#{dir}/endoscope/public"
     
-    before do
-      connect_to_mongo!
-    end
-    
     get '/' do
       erb :dashboard
     end
@@ -118,10 +114,6 @@ module Mouth
         attributables.all_attributes
       end
       Yajl::Encoder.encode(encodable)
-    end
-    
-    def connect_to_mongo!
-      #
     end
     
   end
