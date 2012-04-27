@@ -1,31 +1,125 @@
 # Mouth
 
-Ruby daemon that collects stats via UDP and stores them in Mongo.
+Mouth is a Ruby daemon that collects stats via UDP and stores them in Mongo.  It comes with a modern UI that allows you to view graphs and create dashboards of these statistics.  Mouth is very similar to [StatsD](https://github.com/etsy/statsd) + [Graphite](http://graphite.wikidot.com/) + [Graphene](http://jondot.github.com/graphene/).
 
 
-sudo gem install mouth
+## Why
 
-mouth --pidfile /home/dev/mouth.pid --logfile /home/dev/mouth.log -H x.x.x.x -P 8889 --mongohost y.y.y.y --verbosity 2
-
-mouth-endoscope --mongohost x.x.x.x
+Why duplicate effort of the excellent StatsD / Graphite packages?  I wanted a graphing and monitoring tool that offered:
 
 
-Getting started on your OSX:
+* **Accessible data**.  Because the metrics are stored in Mongo, they are very accessible to any scripts you want to write to read and act on your data.
+* **Easy installation**.  Mouth depends on just Ruby and Mongo, both incredibly easy to install.
+* **Modern, friendly UI**.  Mouth graphs are beautiful and easy to work with.  Exploring data and building dashboards are a joy.
 
-  Make sure mongo is installed and running:
+## Kinds of Metrics
 
-    brew install mongo
-  
-  Install mouth
-  
+There are two kinds of metrics currently: counters and timers.  Both are stored in a time series with minute granularity.
+
+* **Counters**:
+  * how many occurances of something happen per minute?
+  * Can be sampled
+  * Standard usage: Mouth.increment("myapp.happenings")
+  * Advanced usage: Mouth.increment("myapp.happenings", 1, 0.1) # 1/10 sample rate.  UDP packets are sent 1 in 10 times, but count for 1 * 10 each.
+  * Gives you a time series of happenings by minute: {"myapp.happenings" => [1, 2, 5, 20, ...]}
+* **Timers**:
+  * How long does something take?
+  * Standard usage: Mouth.measure("myapp.occurances", 3.3) # This occurance took 3.3 ms to occur
+  * Standard usage 2: Mouth.measure("myapp.occurances") { do_occurance() }
+  * Gives you a time series of occurance timings by minute: {"myapp.happenings" => [1, 2, 5, 20, ...]}
+
+## Installation on OSX
+
+Install mouth:
+
     gem install mouth
-  
-  Start collector daemon:
-  
+
+Install MongoDB if you haven't:
+
+    brew install mongodb
+
+Start collector:
+
     mouth
-  
-  Start web UI:
-  
+
+Start web UI:
+
     mouth-endoscope
+
+Record a metric:
+
+    TODO: command line to record a metric
+
+To load the web UI, go to http://0.0.0.0:5678/ (or whatever port got chosen -- see the Terminal).  Click 'Add Graph' in the lower right-hand corner.
+
+## Installation in Production
+
+You'll want to follow the general gist of what you did for OSX, but make sure to specify your hosts, ports, and log locations.
+NOTE: there is no config file -- all options are via command-line.
+
+    sudo gem install mouth
+    mouth --pidfile /path/to/log/mouth.pid --logfile /path/to/log/mouth.log -H x.x.x.x -P 8889 --mongohost y.y.y.y --verbosity 1
+    mouth-endoscope --mongohost x.x.x.x
+
+## Instrumenting Your Application to Record Metrics
+
+There are many ways to instrument your application:
+
+
+### Using the mouth gem
+
+Mouth comes with a built-in facility to instrument your apps:
     
+    require 'mouth'
+    require 'mouth/instrument'
+    
+    Mouth.host = "0.0.0.0:8889"
+    Mouth.increment('hello.world')
+    Mouth.measure('hello.happening', 42.9)
+    
+### Using mouth-instrument
   
+mouth-instrument is a lightweight gem that doesn't have the baggage of the various gems that come with mouth. Its usage is nearly identical:
+    
+    gem install mouth-instrument
+
+    require 'mouth-instrument'
+    
+    Mouth.host = "0.0.0.0:8889"
+    Mouth.increment('hello.world')
+    Mouth.measure('hello.happening', 42.9)
+    
+### Using any StatsD instrumentation
+  
+Mouth is StatsD compatible -- if you've instrumented your application to record StatsD metrics, it should work on Mouth.  Just replace your StatsD server with a mouth process.
+
+## Accessing Your Data Via Scripts
+
+You can access and act on your metrics quite easily.
+
+  require 'mouth'
+  require 'mouth/sequence'
+  
+  Mouth.host = "0.0.0.0:8889"
+  Sequence.new("exceptions.app", :kind => :counter).sequence
+  # => [4, 9, 0, ...]
+  
+  Sequence.new("app.requests", :kind => :timer, :granularity_in_minutes => 15, :start_time => Time.now - 86400, :end_time => Time.now).sequence
+  # => [{:count => 3, :min => 1, :max => 30, :mean => 17.0, :sum => 51.0, :median => 20, :stddev => 12.02}, ...]
+
+## Tech
+
+* **Ruby** - 1.9.2+ is required.  Ruby was chosen because many Ruby shops already have it deployed as part of their infrastucture.  By putting everything in Ruby, node + python + xyz arne't needed.
+* **MongoDB** -  Mouth stores metrics in Mongo.  Mongo was chosen for 3 reasons:
+  * It's very easy to install and get going
+  * It has drivers for everything, so getting at your data is super easy
+  * It's schemaless design is fairly good for storing time series metrics.
+* **EventMachine** - Mouth is powered by EM, the Ruby way of doing nonblocking IO.
+* **Sinatra** - The web UI is served with a simple Sinatra app.
+* **Backbone.js** - The web UI is powered by Backbone.js
+* **D3.js** - The graphs are powered by D3.js
+
+
+## Contributing
+
+## Thanks
