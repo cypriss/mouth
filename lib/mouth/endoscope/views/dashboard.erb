@@ -30,6 +30,33 @@
     </nav>
   </header>
 
+  <section id="info-panel">
+    <div id="date-range-picker" class="current">
+      <h2>Time Span</h2>
+      <ul>
+        <li><label><input type="radio" name="time_span" value="2_hours" checked> 2 Hours</label></li>
+        <li><label><input type="radio" name="time_span" value="24_hours"> 24 Hours</label></li>
+        <li><label><input type="radio" name="time_span" value="7_days"> 7 Days</label></li>
+      </ul>
+
+      <h2>Starting At</h2>
+      <div class="starting-at">
+        <div class="if-current">
+          <a href="#" class="custom-date">2 hours ago</a>
+        </div>
+        <div class="unless-current">
+          <input type="text" name="starting_at" class="date-starting-at">
+          <div>(Format: 2012-04-26 11:22)</div>
+          <div><a href="#" class="date-reset">Reset</a></div>
+        </div>
+      </div>
+
+      <h2>Ending At</h2>
+      <div class="ending-at">
+        <span>Now</span>
+      </div>
+    </div>
+  </section>
   <section id="current-dashboard">
     <ul id="grid"></ul>
     <a href="#" class="add-graph">Add Graph</a>

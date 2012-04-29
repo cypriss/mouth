@@ -23,7 +23,7 @@ module Mouth
     # Options:
     #  - :start_time (Time object)
     #  - :end_time (Time object)
-    #  - :granularity
+    #  - :granularity_in_minutes
     def data(opts = {})
       sources = self.attributes[:sources] || []
       seq_opts = {:kind => self.attributes[:kind].to_sym}.merge(opts)

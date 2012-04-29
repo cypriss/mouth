@@ -55,7 +55,11 @@ module Mouth
     end
     
     def start_time_epoch
-      (self.start_time.to_i / 60) * 60
+      if self.granularity_in_minutes == 1
+        (self.start_time.to_i / 60) * 60
+      else
+        timestamp_to_nearest(self.start_time, self.granularity_in_minutes, :down) * 60
+      end
     end
     
     def time_sequence

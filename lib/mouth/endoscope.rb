@@ -77,8 +77,13 @@ module Mouth
     end
     
     get '/graphs/:id/data' do
-      # TODO: I need to transform json_input's start_time and end_time into Time objects
-      d = Graph.find(params[:id]).data
+      opts = {
+        :start_time => params[:start_time] ? Time.at(params[:start_time].to_i) : Time.now - (119 * 60),
+        :end_time => params[:end_time] ? Time.at(params[:end_time].to_i) : Time.now,
+        :granularity_in_minutes => params[:granularity_in_minutes] ? params[:granularity_in_minutes].to_i : 1
+      }
+      
+      d = Graph.find(params[:id]).data(opts)
       content_type 'application/json'
       Yajl::Encoder.encode(d)
     end
