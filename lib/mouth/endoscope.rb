@@ -20,11 +20,6 @@ module Mouth
       erb :dashboard
     end
     
-    get '/d3' do
-      erb :d3_test
-    end
-    
-    
     ##
     ## Dashboard API
     ##
@@ -41,7 +36,7 @@ module Mouth
     end
     
     get '/dashboards/:id' do
-      d = Document.find(params[:id])
+      erb :dashboard
     end
     
     post '/dashboards' do
