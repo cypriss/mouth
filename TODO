@@ -1,25 +1,11 @@
-NOW
---
- - Different time ranges, different aggregations
- 
- 2 hours, 1 minute, 120 datapoints
- 24 hours, 15 minute, 96 datapoints
- 7 days, 1 hour, 168 datapoints
- 
---
-
-
 V1
- - Auto-update of data
- ------
+ - Update gems
+ - Style info panel
  - Re implement graph autoplacement
- ------
- - Select time ranges, and aggregate into 15-minute chunks
  ------
  - statsd compatiblity, sampling
  ------
  - better backend impl of source list
- - Figure out how clicking on different dashboards changes the URL, maybe using push state?
  - Make mouth set procline with # of udp packets it has received
  - NEED TO MAKE SURE the collections we generate have indexes on them
  - Great readme
