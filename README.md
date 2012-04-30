@@ -109,7 +109,7 @@ You can access and act on your metrics quite easily.
 
 ## Tech
 
-* **Ruby** - 1.9.2+ is required.  Ruby was chosen because many Ruby shops already have it deployed as part of their infrastucture.  By putting everything in Ruby, node + python + xyz arne't needed.
+* **Ruby** - 1.9.2+ is required.  Ruby was chosen because many Ruby shops already have it deployed as part of their infrastucture.  By putting everything in Ruby, node + python aren't needed.
 * **MongoDB** -  Mouth stores metrics in Mongo.  Mongo was chosen for 3 reasons:
   * It's very easy to install and get going
   * It has drivers for everything, so getting at your data is super easy
