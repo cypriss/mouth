@@ -4,4 +4,4 @@
 log/*.log
 log/*.pid
 Gemfile.lock
-
+*.gem

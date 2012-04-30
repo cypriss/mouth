@@ -77,7 +77,7 @@ module Mouth
     def store!(data)
       key_value, command_sampling = data.split("|", 2)
       key, value = key_value.to_s.split(":")
-      command, sampling = command_sampling.split("|")
+      command, sampling = command_sampling.to_s.split("|")
       
       key = Mouth.parse_key(key).join(".")
       value = value.to_f
