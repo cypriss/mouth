@@ -30,11 +30,18 @@ module Mouth
     attr_accessor :counters
     attr_accessor :timers
     
+    # Stats
+    attr_accessor :udp_packets_received
+    attr_accessor :mongo_flushes
+    
     def initialize(options = {})
       self.host = options[:host] || "localhost"
       self.port = options[:port] || 8889
       self.mongo_db_name = options[:mongo_db_name] || "mouth"
       self.mongo_hosts = options[:mongo_hosts] || ["localhost"]
+      
+      self.udp_packets_received = 0
+      self.mongo_flushes = 0
       
       self.counters = {}
       self.timers = {}
@@ -53,10 +60,12 @@ module Mouth
           Mouth.logger.info "Counters: #{self.counters.inspect}"
           Mouth.logger.info "Timers: #{self.timers.inspect}"
           self.flush!
+          self.set_procline!
         end
 
         EM.next_tick do
           Mouth.logger.info "Mouth reactor started..."
+          self.set_procline!
         end
       end
     end
@@ -89,6 +98,8 @@ module Mouth
         self.counters[ts][key] ||= 0.0
         self.counters[ts][key] += value * factor
       end
+      
+      self.udp_packets_received += 1
     end
     
     def flush!
@@ -152,6 +163,8 @@ module Mouth
         
         self.mongo_db.collection(collection_name).insert(doc)
       end
+      
+      self.mongo_flushes += 1 if mongo_docs.any?
     end
     
     def mongo_db
@@ -162,6 +175,10 @@ module Mouth
           raise "TODO: ability to connect to a replica set."
         end
       end
+    end
+    
+    def set_procline!
+      $0 = "mouth [started] [UDP Recv: #{self.udp_packets_received}] [Mongo saves: #{self.mongo_flushes}]"
     end
     
     private
@@ -213,6 +230,6 @@ module Mouth
         return values[middle]
       end
     end
-    
+        
   end # class Sucker
 end # module

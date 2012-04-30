@@ -2,7 +2,6 @@ V1
  - mouth-instrument separate gem
  ------
  - Make mouth set procline with # of udp packets it has received
- - Polish readme
 
 Next
  - Cookie-ize the timespan settings
