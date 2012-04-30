@@ -209,7 +209,7 @@ body {
   top: 53px;
   left: 0;
   bottom: 0;
-  width: 200px;
+  width: 150px;
   background-color: tan;
 }
 
@@ -227,11 +227,28 @@ body {
     display:none;
 }
 
+#date-range-picker {
+    -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 4px;
+      color: black;
+}
+
+#date-range-picker h2 {
+    font-weight: bolder;
+}
+
+#date-range-picker .example {
+    font-size: 11px;
+    color: #666;
+}
+
 #current-dashboard {
   border-top: 1px solid black;
   position: absolute;
   top: 53px;
-  left: 200px;
+  left: 150px;
   right: 0;
   bottom: 0;
   -moz-box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.5);

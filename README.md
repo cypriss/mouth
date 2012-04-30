@@ -27,6 +27,7 @@ There are two kinds of metrics currently: counters and timers.  Both are stored 
   * Standard usage: Mouth.measure("myapp.occurances", 3.3) # This occurance took 3.3 ms to occur
   * Standard usage 2: Mouth.measure("myapp.occurances") { do_occurance() }
   * Gives you a time series of occurance timings by minute: {"myapp.happenings" => [1, 2, 5, 20, ...]}
+* **Gauges**: (Coming soon)
 
 ## Installation on OSX
 
@@ -48,7 +49,7 @@ Start web UI:
 
 Record a metric:
 
-    TODO: command line to record a metric
+    ruby -e 'require "mouth"; require "mouth/instrument"; Mouth.increment("gorets")'
 
 To load the web UI, go to http://0.0.0.0:5678/ (or whatever port got chosen -- see the Terminal).  Click 'Add Graph' in the lower right-hand corner.
 
@@ -65,7 +66,6 @@ NOTE: there is no config file -- all options are via command-line.
 
 There are many ways to instrument your application:
 
-
 ### Using the mouth gem
 
 Mouth comes with a built-in facility to instrument your apps:
@@ -73,7 +73,7 @@ Mouth comes with a built-in facility to instrument your apps:
     require 'mouth'
     require 'mouth/instrument'
     
-    Mouth.host = "0.0.0.0:8889"
+    Mouth.server = "0.0.0.0:8889"
     Mouth.increment('hello.world')
     Mouth.measure('hello.happening', 42.9)
     
@@ -85,7 +85,7 @@ mouth-instrument is a lightweight gem that doesn't have the baggage of the vario
 
     require 'mouth-instrument'
     
-    Mouth.host = "0.0.0.0:8889"
+    Mouth.server = "0.0.0.0:8889"
     Mouth.increment('hello.world')
     Mouth.measure('hello.happening', 42.9)
     
@@ -122,4 +122,17 @@ You can access and act on your metrics quite easily.
 
 ## Contributing
 
+You're interested in contributing to Mouth? *AWESOME*. Here are the basic steps:
+
+fork Mouth from here: http://github.com/cypriss/mouth
+
+1. Clone your fork
+2. Hack away
+3. If you are adding new functionality, document it in the README
+4. If necessary, rebase your commits into logical chunks, without errors
+5. Push the branch up to GitHub
+6. Send a pull request to the cypriss/mouth project.
+
 ## Thanks
+
+Thanks to UserVoice.com for sponsoring this project.  Thanks to the [StatsD](https://github.com/etsy/statsd) project for massive inspiration.  Other contributors: https://github.com/cypriss/mouth/graphs/contributors

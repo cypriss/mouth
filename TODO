@@ -1,28 +1,20 @@
 V1
- - Update gems
- - Style info panel
- - Re implement graph autoplacement
+ - mouth-instrument separate gem
  ------
- - statsd compatiblity, sampling
- ------
- - better backend impl of source list
  - Make mouth set procline with # of udp packets it has received
- - NEED TO MAKE SURE the collections we generate have indexes on them
- - Great readme
- -  Example files for how to record metrics in various languages
-   - Ruby, php, python, .NET
-   - mouth-instrument
- - statsd instrument compatibility
- - Add in the *option* (somehow) to display times in current time zone OR UTC
- 
+ - Polish readme
 
-V2
+Next
+ - Cookie-ize the timespan settings
+ - Re implement graph autoplacement
+ - Better backend impl of source list
  - Figure out how dashboards can scroll
  - Show period averages / rates
  - Full keyboard navigation
  - Build in some mechanisms to diagnose mongo connection issues
  - Auto refreshing source list (every minute?)
- - Tests
+ - More Tests
+ - Figure out time zones
 
 Someday
  - Picker:

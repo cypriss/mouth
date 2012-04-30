@@ -61,21 +61,33 @@ module Mouth
       end
     end
     
+    # counter: gorets:1|c
+    # counter w/ sampling: gorets:1|c|@0.1
+    # timer: glork:320|ms
+    # (future) gauge: gaugor:333|g
     def store!(data)
-      command, key, value = data.split(":")
+      key_value, command_sampling = data.split("|", 2)
+      key, value = key_value.to_s.split(":")
+      command, sampling = command_sampling.split("|")
+      
       key = Mouth.parse_key(key).join(".")
       value = value.to_f
       
       ts = minute_timestamps
       
-      if command == "m"
+      if command == "ms"
         self.timers[ts] ||= {}
         self.timers[ts][key] ||= []
         self.timers[ts][key] << value
       elsif command == "c"
+        factor = 1.0
+        if sampling
+          factor = sampling.sub("@", "").to_f
+          factor = (factor == 0.0 || factor > 1.0) ? 1.0 : 1.0 / factor
+        end
         self.counters[ts] ||= {}
         self.counters[ts][key] ||= 0.0
-        self.counters[ts][key] += value
+        self.counters[ts][key] += value * factor
       end
     end
     

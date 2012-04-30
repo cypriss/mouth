@@ -13,5 +13,6 @@ require 'mouth/record'
 require 'mouth/graph'
 require 'mouth/dashboard'
 require 'mouth/source'
+require 'mouth/instrument'
 
 IRB.start

@@ -1,4 +1,4 @@
-# Only include those things needed for the sucker/daemon, NOT the web server
+# Since the gem can be used in many ways (sucker daemon, sinatra app, instrument, ad-hoc, don't include anything)
 require 'mouth/version'
 
 module Mouth
