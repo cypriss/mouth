@@ -1,3 +1,7 @@
+Now
+ - Speed improvements for prod
+ - Make sure that if you change dashboards, we don't poll for data on other dashboards
+
 Next
  - Cookie-ize the timespan settings
  - Re implement graph autoplacement

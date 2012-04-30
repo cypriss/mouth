@@ -79,7 +79,21 @@ module Mouth
       ###
       map_function = <<-JS
         function() {
-          emit(Math.floor((this.t - #{start_timestamp}) / #{minutes}), this);
+          var doc = {t: this.t, m: {}, c: {}}
+          ,   thisMetrics = #{self.kind_letter == 'c' ? 'this.c' : 'this.m'}
+          ,   thisDoc = #{self.kind_letter == 'c' ? 'doc.c' : 'doc.m'}
+          ,   fields = #{self.metrics.to_s}
+          ,   i, k, val
+          ;
+          
+          for (i = 0; i < fields.length; i += 1) {
+            val = thisMetrics[fields[i]];
+            if (typeof val != "undefined") {
+              thisDoc[fields[i]] = val;
+            }
+          }
+          
+          emit(Math.floor((this.t - #{start_timestamp}) / #{minutes}), doc);
         }
       JS
   
