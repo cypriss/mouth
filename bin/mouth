@@ -16,6 +16,7 @@ options = {
 parser = OptionParser.new do |op|
   op.banner = "Usage: mouth [options]"
 
+  op.separator "Mouth version: #{Mouth::VERSION}"
   op.separator ""
   op.separator "Options:"
 
