@@ -756,6 +756,16 @@ header p {
   font-size: 14px;
   background-color: #FFE788;
 }
+#banner .rubygem {
+  position: fixed;
+  left: 50%;
+  margin-left: -195px;
+  padding: 10px 12px;
+  margin-top: 6px;
+  line-height: 14px;
+  font-size: 14px;
+  background-color: #FFE788;
+}
 #banner .downloads {
   float: right;
   margin: 0 45px 0 0;
@@ -768,6 +778,17 @@ header p {
   text-transform: uppercase;
   text-shadow: rgba(255, 255, 255, 0.2) 0 1px 0;
 }
+#banner .downloads .snippet {
+  padding: 8px 15px;
+  float: left;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+#banner .downloads .snippet code {
+
+}
+
 #banner ul {
   list-style: none;
   height: 40px;
