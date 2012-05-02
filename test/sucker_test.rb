@@ -39,6 +39,19 @@ class SuckerTest < Test::Unit::TestCase
     assert_equal ({"default.happening" => 3}), r.counters.values.first
   end
   
+  def test_storing_invalid
+    r = Mouth::Sucker.new
+    
+    r.store!("stuff")
+    r.store!("stuff:3")
+    r.store!("stuff|c")
+    r.store!("")
+    r.store!("3|c")
+    r.store!("stuff:3|p")
+    
+    assert_equal nil, r.counters.values.first
+  end
+  
   def test_storing_timer
     r = Mouth::Sucker.new
     

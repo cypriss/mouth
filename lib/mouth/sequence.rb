@@ -80,8 +80,8 @@ module Mouth
       map_function = <<-JS
         function() {
           var doc = {t: this.t, m: {}, c: {}}
-          ,   thisMetrics = #{self.kind_letter == 'c' ? 'this.c' : 'this.m'}
-          ,   thisDoc = #{self.kind_letter == 'c' ? 'doc.c' : 'doc.m'}
+          ,   thisMetrics = this.#{self.kind_letter.to_s}
+          ,   docMetrics = doc.#{self.kind_letter.to_s}
           ,   fields = #{self.metrics.to_s}
           ,   i, k, val
           ;
@@ -89,7 +89,7 @@ module Mouth
           for (i = 0; i < fields.length; i += 1) {
             val = thisMetrics[fields[i]];
             if (typeof val != "undefined") {
-              thisDoc[fields[i]] = val;
+              docMetrics[fields[i]] = val;
             }
           }
           

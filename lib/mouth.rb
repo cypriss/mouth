@@ -5,12 +5,13 @@ module Mouth
   class << self
     attr_accessor :logger
     attr_accessor :mongo_host
+    attr_accessor :mongo_port
 
     # Returns a mongo connection (NOT an em-mongo connection)
     def mongo
       @mongo ||= begin
         require 'mongo'   # require mongo here, as opposed to the top, because we don't want mongo included in the reactor (use em-mongo for that)
-        Mongo::Connection.new(self.mongo_host || "localhost").db("mouth")
+        Mongo::Connection.new(self.mongo_host || "localhost", self.mongo_port || 27017, :pool_size => 5, :pool_timeout => 20).db("mouth")
       end
     end
     

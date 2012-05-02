@@ -17,6 +17,7 @@ task :omg do
     loc = "#{home}/#{file}"
     upload file, loc
     sudo "gem install #{loc}"
+    run "rm #{loc}"
     run "mouth-endoscope -K"
     run "mouth --pidfile #{home}/mouth.pid -K"
     run "sleep 5"

@@ -1,18 +1,17 @@
 Now
- - Speed improvements for prod
- - Make sure that if you change dashboards, we don't poll for data on other dashboards
+ - Build a caching system so that ticks don't pull in old data
 
 Next
  - Cookie-ize the timespan settings
  - Re implement graph autoplacement
  - Better backend impl of source list
- - Figure out how dashboards can scroll
  - Show period averages / rates
  - Full keyboard navigation
  - Build in some mechanisms to diagnose mongo connection issues
  - Auto refreshing source list (every minute?)
  - More Tests
  - Figure out time zones
+ - replicaset connection for endoscope
 
 Someday
  - Picker:

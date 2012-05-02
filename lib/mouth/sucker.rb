@@ -75,9 +75,11 @@ module Mouth
     # timer: glork:320|ms
     # (future) gauge: gaugor:333|g
     def store!(data)
-      key_value, command_sampling = data.split("|", 2)
+      key_value, command_sampling = data.to_s.split("|", 2)
       key, value = key_value.to_s.split(":")
       command, sampling = command_sampling.to_s.split("|")
+      
+      return unless key && value && command && key.length > 0 && value.length > 0 && command.length > 0
       
       key = Mouth.parse_key(key).join(".")
       value = value.to_f
