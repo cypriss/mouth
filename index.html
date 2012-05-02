@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mouth by cypriss</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Mouth</h1>
+        <p>Collect and display statistics with Ruby + Mongo</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/cypriss/mouth" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/cypriss/mouth/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/cypriss/mouth/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Mouth</h1>
+
+<p>Mouth is a Ruby daemon that collects stats via UDP and stores them in Mongo.  It comes with a modern UI that allows you to view graphs and create dashboards of these statistics.  Mouth is very similar to <a href="https://github.com/etsy/statsd">StatsD</a> + <a href="http://graphite.wikidot.com/">Graphite</a> + <a href="http://jondot.github.com/graphene/">Graphene</a>.</p>
+
+<h2>Why</h2>
+
+<p>Why duplicate effort of the excellent StatsD / Graphite packages?  I wanted a graphing and monitoring tool that offered:</p>
+
+<ul>
+<li>
+<strong>Accessible data</strong>.  Because the metrics are stored in Mongo, they are very accessible to any scripts you want to write to read and act on your data.</li>
+<li>
+<strong>Easy installation</strong>.  Mouth depends on just Ruby and Mongo, both incredibly easy to install.</li>
+<li>
+<strong>Modern, friendly UI</strong>.  Mouth graphs are beautiful and easy to work with.  Exploring data and building dashboards are a joy.</li>
+</ul><h2>Kinds of Metrics</h2>
+
+<p>There are two kinds of metrics currently: counters and timers.  Both are stored in a time series with minute granularity.</p>
+
+<ul>
+<li>
+<strong>Counters</strong>:
+
+<ul>
+<li>how many occurances of something happen per minute?</li>
+<li>Can be sampled</li>
+<li>Standard usage: Mouth.increment("myapp.happenings")</li>
+<li>Advanced usage: Mouth.increment("myapp.happenings", 1, 0.1) # 1/10 sample rate.  UDP packets are sent 1 in 10 times, but count for 1 * 10 each.</li>
+<li>Gives you a time series of happenings by minute: {"myapp.happenings" =&gt; [1, 2, 5, 20, ...]}</li>
+</ul>
+</li>
+<li>
+<strong>Timers</strong>:
+
+<ul>
+<li>How long does something take?</li>
+<li>Standard usage: Mouth.measure("myapp.occurances", 3.3) # This occurance took 3.3 ms to occur</li>
+<li>Standard usage 2: Mouth.measure("myapp.occurances") { do_occurance() }</li>
+<li>Gives you a time series of occurance timings by minute: {"myapp.happenings" =&gt; [1, 2, 5, 20, ...]}</li>
+</ul>
+</li>
+<li>
+<strong>Gauges</strong>: (Coming soon)</li>
+</ul><h2>Installation on OSX</h2>
+
+<p>Install mouth:</p>
+
+<pre><code>gem install mouth
+</code></pre>
+
+<p>Install MongoDB if you haven't:</p>
+
+<pre><code>brew install mongodb
+</code></pre>
+
+<p>Start collector:</p>
+
+<pre><code>mouth
+</code></pre>
+
+<p>Start web UI:</p>
+
+<pre><code>mouth-endoscope
+</code></pre>
+
+<p>Record a metric:</p>
+
+<pre><code>ruby -e 'require "mouth"; require "mouth/instrument"; Mouth.increment("gorets")'
+</code></pre>
+
+<p>To load the web UI, go to <a href="http://0.0.0.0:5678/">http://0.0.0.0:5678/</a> (or whatever port got chosen -- see the Terminal).  Click 'Add Graph' in the lower right-hand corner.</p>
+
+<h2>Installation in Production</h2>
+
+<p>You'll want to follow the general gist of what you did for OSX, but make sure to specify your hosts, ports, and log locations.
+NOTE: there is no config file -- all options are via command-line.</p>
+
+<pre><code>sudo gem install mouth
+mouth --pidfile /path/to/log/mouth.pid --logfile /path/to/log/mouth.log -H x.x.x.x -P 8889 --mongohost y.y.y.y --verbosity 1
+mouth-endoscope --mongohost x.x.x.x
+</code></pre>
+
+<h2>Instrumenting Your Application to Record Metrics</h2>
+
+<p>There are many ways to instrument your application:</p>
+
+<h3>Using the mouth gem</h3>
+
+<p>Mouth comes with a built-in facility to instrument your apps:</p>
+
+<pre><code>require 'mouth'
+require 'mouth/instrument'
+
+Mouth.server = "0.0.0.0:8889"
+Mouth.increment('hello.world')
+Mouth.measure('hello.happening', 42.9)
+</code></pre>
+
+<h3>Using mouth-instrument</h3>
+
+<p>mouth-instrument is a lightweight gem that doesn't have the baggage of the various gems that come with mouth. Its usage is nearly identical:</p>
+
+<pre><code>gem install mouth-instrument
+
+require 'mouth-instrument'
+
+Mouth.server = "0.0.0.0:8889"
+Mouth.increment('hello.world')
+Mouth.measure('hello.happening', 42.9)
+</code></pre>
+
+<h3>Using any StatsD instrumentation</h3>
+
+<p>Mouth is StatsD compatible -- if you've instrumented your application to record StatsD metrics, it should work on Mouth.  Just replace your StatsD server with a mouth process.</p>
+
+<h2>Accessing Your Data Via Scripts</h2>
+
+<p>You can access and act on your metrics quite easily.</p>
+
+<p>require 'mouth'
+  require 'mouth/sequence'</p>
+
+<p>Mouth.host = "0.0.0.0:8889"
+  Sequence.new("exceptions.app", :kind =&gt; :counter).sequence
+  # =&gt; [4, 9, 0, ...]</p>
+
+<p>Sequence.new("app.requests", :kind =&gt; :timer, :granularity_in_minutes =&gt; 15, :start_time =&gt; Time.now - 86400, :end_time =&gt; Time.now).sequence
+  # =&gt; [{:count =&gt; 3, :min =&gt; 1, :max =&gt; 30, :mean =&gt; 17.0, :sum =&gt; 51.0, :median =&gt; 20, :stddev =&gt; 12.02}, ...]</p>
+
+<h2>Tech</h2>
+
+<ul>
+<li>
+<strong>Ruby</strong> - 1.9.2+ is required.  Ruby was chosen because many Ruby shops already have it deployed as part of their infrastucture.  By putting everything in Ruby, node + python aren't needed.</li>
+<li>
+<strong>MongoDB</strong> -  Mouth stores metrics in Mongo.  Mongo was chosen for 3 reasons:
+
+<ul>
+<li>It's very easy to install and get going</li>
+<li>It has drivers for everything, so getting at your data is super easy</li>
+<li>It's schemaless design is fairly good for storing time series metrics.</li>
+</ul>
+</li>
+<li>
+<strong>EventMachine</strong> - Mouth is powered by EM, the Ruby way of doing nonblocking IO.</li>
+<li>
+<strong>Sinatra</strong> - The web UI is served with a simple Sinatra app.</li>
+<li>
+<strong>Backbone.js</strong> - The web UI is powered by Backbone.js</li>
+<li>
+<strong>D3.js</strong> - The graphs are powered by D3.js</li>
+</ul><h2>Contributing</h2>
+
+<p>You're interested in contributing to Mouth? <em>AWESOME</em>. Here are the basic steps:</p>
+
+<p>fork Mouth from here: <a href="http://github.com/cypriss/mouth">http://github.com/cypriss/mouth</a></p>
+
+<ol>
+<li>Clone your fork</li>
+<li>Hack away</li>
+<li>If you are adding new functionality, document it in the README</li>
+<li>If necessary, rebase your commits into logical chunks, without errors</li>
+<li>Push the branch up to GitHub</li>
+<li>Send a pull request to the cypriss/mouth project.</li>
+</ol><h2>Thanks</h2>
+
+<p>Thanks to UserVoice.com for sponsoring this project.  Thanks to the <a href="https://github.com/etsy/statsd">StatsD</a> project for massive inspiration.  Other contributors: <a href="https://github.com/cypriss/mouth/graphs/contributors">https://github.com/cypriss/mouth/graphs/contributors</a></p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/cypriss">cypriss</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
