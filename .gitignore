@@ -1,0 +1,7 @@
+.rvmrc
+*.log
+*.pid
+log/*.log
+log/*.pid
+Gemfile.lock
+*.gem
