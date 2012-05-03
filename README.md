@@ -1,12 +1,10 @@
 # Mouth
 
-Mouth is a Ruby daemon that collects stats via UDP and stores them in Mongo.  It comes with a modern UI that allows you to view graphs and create dashboards of these statistics.  Mouth is very similar to [StatsD](https://github.com/etsy/statsd) + [Graphite](http://graphite.wikidot.com/) + [Graphene](http://jondot.github.com/graphene/).
-
+Mouth is a Ruby daemon that collects metrics via UDP and stores them in Mongo.  It comes with a modern UI that allows you to view graphs and create dashboards of these statistics.  Mouth is very similar to [StatsD](https://github.com/etsy/statsd) + [Graphite](http://graphite.wikidot.com/) + [Graphene](http://jondot.github.com/graphene/).
 
 ## Why
 
 Why duplicate effort of the excellent StatsD / Graphite packages?  I wanted a graphing and monitoring tool that offered:
-
 
 * **Accessible data**.  Because the metrics are stored in Mongo, they are very accessible to any scripts you want to write to read and act on your data.
 * **Easy installation**.  Mouth depends on just Ruby and Mongo, both incredibly easy to install.
