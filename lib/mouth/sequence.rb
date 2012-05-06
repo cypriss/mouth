@@ -79,8 +79,8 @@ module Mouth
       ###
       map_function = <<-JS
         function() {
-          var doc = {t: this.t, m: {}, c: {}}
-          ,   thisMetrics = this.#{self.kind_letter.to_s}
+          var doc = {t: this.t, m: {}, c: {}, g: {}}
+          ,   thisMetrics = this.#{self.kind_letter.to_s} || {}
           ,   docMetrics = doc.#{self.kind_letter.to_s}
           ,   fields = #{self.metrics.to_s}
           ,   i, k, val
@@ -99,7 +99,7 @@ module Mouth
   
       reduce_function = <<-JS
         function(key, values) {
-          var result = {c: {}, m: {}}
+          var result = {c: {}, m: {}, g: {}}
           ,   k
           ,   existing
           ,   current
@@ -109,12 +109,20 @@ module Mouth
             if (value.c) {
               for (k in value.c) {
                 existing = result.c[k] || 0;
-                result.c[k] = existing + value.c[k]
+                result.c[k] = existing + value.c[k];
+              }
+            }
+            if (value.g) {
+              for (k in value.g) {
+                existing = result.g[k] || [0, -1];
+                if (value.t > existing[1]) {
+                  result.g[k] = [value.g[k], value.t];
+                }
               }
             }
             if (value.m) {
               for (k in value.m) {
-                current = value.m[k]
+                current = value.m[k];
                 existing = result.m[k];
                 if (!existing) {
                   current.median = [current.median];
@@ -139,6 +147,10 @@ module Mouth
               }
             }
           });
+          
+          for (k in result.g) {
+            result.g[k] = result.g[k][0];
+          }
           
           for (k in result.m) {
             existing = result.m[k];
