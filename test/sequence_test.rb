@@ -16,7 +16,7 @@ class SequenceTest < Test::Unit::TestCase
     timer = {"count" => 5, "min" => 1, "max" => 10, "mean" => 5, "sum" => 20, "median" => 4, "stddev" => 2.3}
     (@start_timestamp..@end_timestamp).each do |t|
       # Insert the document into mongo
-      Mouth.collection(Mouth.mongo_collection_name(@namespace)).update({"t" => t}, {"$set" => {"c.#{@metric}" => counter, "m.#{@metric}" => timer}}, :upsert => true)
+      Mouth.collection(Mouth.mongo_collection_name(@namespace)).update({"t" => t}, {"$set" => {"c.#{@metric}" => counter, "m.#{@metric}" => timer, "g.#{@metric}" => (t % 2 == 0 ? counter + 1 : nil)}}, :upsert => true)
     end
   end
   
@@ -158,6 +158,21 @@ class SequenceTest < Test::Unit::TestCase
     values = seq.sequence
     
     assert_equal [0], values
+  end
+  
+  def test_minute_gauge_sequences
+    seq = Mouth::Sequence.new("#{@namespace}.#{@metric}", :kind => :gauge, :start_time => @start_time, :end_time => @end_time)
+
+    sequences = seq.sequences
+    
+    assert_equal ["test"], sequences.keys
+    assert_equal 1, sequences.values.length
+    
+    values = sequences.values.first
+    
+    assert_equal 121, values.length
+    
+    assert values.all? {|v| v == 2}
   end
   
 end

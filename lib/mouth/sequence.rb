@@ -216,7 +216,14 @@ module Mouth
         h
       end
       
-      default = self.kind == :counter ? 0 : {"count" => 0, "min" => nil, "max" => nil, "mean" => nil, "sum" => 0, "median" => nil, "stddev" => nil}
+      default = case self.kind
+      when :counter
+        0
+      when :timer
+        {"count" => 0, "min" => nil, "max" => nil, "mean" => nil, "sum" => 0, "median" => nil, "stddev" => nil}
+      when :gauge
+        nil
+      end
       
       seqs = {}
       self.metrics.each do |m|
@@ -228,6 +235,16 @@ module Mouth
         seqs[m] = seq
       end
       
+      if self.kind == :gauge
+        seqs.each_pair do |met, seq|
+          cur_val = nil
+          seq.each_with_index do |v, i|
+            seq[i] = cur_val || 0 unless v  # Note: In the future, we can remove || 0 and have leading nils.  Then, fill those in with values from a previous time period
+            cur_val = v || cur_val
+          end
+        end
+      end
+      
       seqs
     end
     
@@ -236,7 +253,11 @@ module Mouth
     end
     
     def kind_letter
-      @kind_letter ||= self.kind == :counter ? "c" : "m"
+      @kind_letter ||= case self.kind
+      when :counter then "c"
+      when :timer then "m"
+      when :gauge then "g"
+      end
     end
     
     def fields
@@ -268,6 +289,7 @@ module Mouth
       collection_name = Mouth.mongo_collection_name(opts[:namespace])
       
       counter = 99
+      gauge = 50
       (opts[:start_time]..opts[:end_time]).each do |t|
         
         # Generate garbage data for the sample
@@ -284,12 +306,19 @@ module Mouth
           "stddev" => rand(10)
         }
         
+        set = {"c.#{opts[:metric]}" => counter, "m.#{opts[:metric]}" => m_doc}
+        if rand(4) == 0
+          set["g.#{opts[:metric]}"] = gauge
+        end
+        
         # Insert the document into mongo
-        Mouth.collection(collection_name).update({"t" => t}, {"$set" => {"c.#{opts[:metric]}" => counter, "m.#{opts[:metric]}" => m_doc}}, :upsert => true)
+        Mouth.collection(collection_name).update({"t" => t}, {"$set" => set}, :upsert => true)
         
         # Update counter randomly
         counter += rand(10) - 5
+        gauge += rand(10) - 5
         counter = 0 if counter < 0
+        gauge = 0 if gauge < 0
       end
       
       true

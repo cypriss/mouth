@@ -1,7 +1,9 @@
 Now
- - Build a caching system so that ticks don't pull in old data
+ - Gauges
+ - Mouth::Recorder
 
 Next
+ - Build a caching system so that ticks don't pull in old data
  - Cookie-ize the timespan settings
  - Re implement graph autoplacement
  - Better backend impl of source list

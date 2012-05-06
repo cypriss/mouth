@@ -29,6 +29,7 @@ module Mouth
     # Accumulators of our data
     attr_accessor :counters
     attr_accessor :timers
+    attr_accessor :gauges
     
     # Stats
     attr_accessor :udp_packets_received
@@ -45,6 +46,7 @@ module Mouth
       
       self.counters = {}
       self.timers = {}
+      self.gauges = {}
     end
     
     def suck!
@@ -59,6 +61,7 @@ module Mouth
         EM.add_periodic_timer(10) do
           Mouth.logger.info "Counters: #{self.counters.inspect}"
           Mouth.logger.info "Timers: #{self.timers.inspect}"
+          Mouth.logger.info "Gauges: #{self.gauges.inspect}"
           self.flush!
           self.set_procline!
         end
@@ -73,7 +76,7 @@ module Mouth
     # counter: gorets:1|c
     # counter w/ sampling: gorets:1|c|@0.1
     # timer: glork:320|ms
-    # (future) gauge: gaugor:333|g
+    # gauge: gaugor:333|g
     def store!(data)
       key_value, command_sampling = data.to_s.split("|", 2)
       key, value = key_value.to_s.split(":")
@@ -99,6 +102,9 @@ module Mouth
         self.counters[ts] ||= {}
         self.counters[ts][key] ||= 0.0
         self.counters[ts][key] += value * factor
+      elsif command == "g"
+        self.gauges[ts] ||= {}
+        self.gauges[ts][key] = value
       end
       
       self.udp_packets_received += 1
@@ -117,7 +123,8 @@ module Mouth
       #   },
       #   m: {
       #     occasions: {...}
-      #   }
+      #   },
+      #   g: {things: 3}
       # }
       
       self.counters.each do |cur_ts, counters_to_save|
@@ -133,6 +140,22 @@ module Mouth
           end
           
           self.counters.delete(cur_ts)
+        end
+      end
+      
+      self.gauges.each do |cur_ts, gauges_to_save|
+        if cur_ts <= limit_ts
+          gauges_to_save.each do |gauge_key, value|
+            ns, sub_key = Mouth.parse_key(gauge_key)
+            mongo_key = "#{ns}:#{ts}"
+            mongo_docs[mongo_key] ||= {}
+            
+            cur_mongo_doc = mongo_docs[mongo_key]
+            cur_mongo_doc["g"] ||= {}
+            cur_mongo_doc["g"][sub_key] = value
+          end
+          
+          self.gauges.delete(cur_ts)
         end
       end
       
@@ -160,7 +183,7 @@ module Mouth
       
       mongo_docs.each do |key, doc|
         ns, ts = key.split(":")
-        collection_name = "mouth_#{ns}"
+        collection_name = Mouth.mongo_collection_name(ns)
         doc["t"] = ts.to_i
         
         self.mongo_db.collection(collection_name).insert(doc)

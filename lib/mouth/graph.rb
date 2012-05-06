@@ -8,7 +8,7 @@ module Mouth
    #     :height => 7,
    #     :width => 20
    #   },
-   #   :kind => 'counters' || 'timer',
+   #   :kind => 'counter' || 'timer' || 'gauge',
    #   :sources => ["auth.authentications"]
    # }
   class Graph < Record

@@ -32,6 +32,10 @@ module Mouth
       def increment(key, delta = 1, sample_rate = nil)
         write(key, delta, :c, sample_rate)
       end
+      
+      def gauge(key, value)
+        write(key, value, :g)
+      end
 
       protected
 

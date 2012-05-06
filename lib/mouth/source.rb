@@ -16,9 +16,10 @@ module Mouth
       tuples = []
       col_names.each do |col_name|
         namespace = col_name.match(/mouth_(.+)/)[1]
-        counters, timers = all_for_collection(Mouth.collection(col_name))
+        counters, timers, gauges = all_for_collection(Mouth.collection(col_name))
         counters.each {|s| tuples << {:source => "#{namespace}.#{s}", :kind => "counter"} }
         timers.each {|s| tuples << {:source => "#{namespace}.#{s}", :kind => "timer"} }
+        gauges.each {|s| tuples << {:source => "#{namespace}.#{s}", :kind => "gauge"} }
       end
       
       tuples.sort_by {|t| "#{t[:kind]}#{t[:source]}" }.collect {|t| new(t) }
@@ -37,6 +38,11 @@ module Mouth
             vh = {};
             vh[k] = true;
             emit("timers", {ks: vh});
+          }
+          for (k in this.g) {
+            vh = {};
+            vh[k] = true;
+            emit("gauges", {ks: vh});
           }
         }
       JS
@@ -58,6 +64,7 @@ module Mouth
       
       counters = []
       timers = []
+      gauges = []
       if result && result["results"].is_a?(Array)
         result["results"].each do |r|
           k, v = r["_id"], r["value"]
@@ -65,11 +72,13 @@ module Mouth
             timers << v["ks"].keys
           elsif k == "counters"
             counters << v["ks"].keys
+          elsif k == "gauges"
+            gauges << v["ks"].keys
           end
         end
       end
       
-      [counters.flatten.compact.uniq, timers.flatten.compact.uniq]
+      [counters.flatten.compact.uniq, timers.flatten.compact.uniq, gauges.flatten.compact.uniq]
     end
     
   end

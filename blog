@@ -12,11 +12,76 @@ Why duplicate effort of the excellent StatsD / Graphite packages?  I wanted a gr
 
 ## What it Can Do
 
-With a few lines of instrumentation in your Rails app, you can collect counters and timers for all your controller actions.
+First, there's the standard ways you can use Mouth out of the box.  Instrument your app to collect metrics, and then look at those metrics in the UI. At UserVoice, we've instrumented all controller-actions with a few lines of code in some middleware. This gives us counters and timers for all controller action.  Timers let us identify and improve slow actions, and counters let us find those actions that aren't being used. Similarly, we've also instrumented all of our resque jobs.
+
+[Screenshot of a graph of a timer of some action]
+
+We've also tapped into our Airbrake gem to count how many exceptions over time we're getting, our CSRF protection to identify how many times a user's session is reset, and other such exceptional things.
+
+[Screenshot of spike in CSRF protection w/ arrow -- someone trying to pen test?]
+
+You can build nice dashboards of your metrics and come back to them later.  The UI also lets you query by time interval and 
+
+That's all great, but doesn't touch on a huge benefit of mouth -- how accessible the data is.  We use Nagios at UserVoice, and wanted a way to fire alerts if we're getting too many exceptions.  This was trivial:
+
+    require 'mouth'
+    require 'mouth/sequence'
+    
+    seq = Mouth::Sequence.new('exceptions.app', :start_time => 5.minutes.ago)
+    if total = seq.sequence.sum > 10
+      Nagios.trigger_alert("Oh no! There were #{total} exceptions in 5 minutes!")
+    end
+
+It turns out that this is the very similar technology and techniques that power UserVoice's reports -- in fact, I'm fairly sure that we could implement most of our customer analytics in UserVoice with Mouth. If you do this, you don't want to use the UDP API -- instead, you want to directly insert your metrics into Mongo.
+
+    Mouth::Recorder.increment("pageviews.customer#{cust_id}")
+    
+Then pull up a report of it to display in your end-user facing UI:
+    
+    seq = Mouth::Sequence.new("pageviews.customer#{cust_id}", :start_time => 1.week.ago, :granularity_in_minutes => 60)
+    seq.sequence # You can go ahead and graph these datapoints: [1209, 234, ...]
+
+Because Mouth data is backed in Mongo, it's relatively scalable and reliable.  Because it's easily accessed in Ruby, it's super easy to incorporate into your apps, scripts, and monitoring tools.
 
 ## How it Works
 
-When you write this ruby code in your app ____, it fires off this UDP packet: _____.  This goes to the mouth collector daemon, which aggregates it at minute granularity.
+Instrumenting your app by default will fire UDP packets, which are collected by the daemon, aggregated at minute, and then stored in Mongo.
+
+    Mouth.increment("happenings.foobar")         # Fires this UDP Packet: "happenings.foobar:1|c"
+    Mouth.measure("happenings.baz") { do_baz() } # Fires this UDP Packet: "happenings.baz:45.3|ms"
+    Mouth.gauge("happenings.fizzle", 1023)       # Fires this UDP Packet: "happenings.fizzle:1023|g"
+
+This stores a series of Mongo documents.  Each Mongo document looks like this:
+
+    {
+      t: 22269843,      // Timestamp at minute granularity.  Time.now.to_i / 60.
+      c: {
+        "foo": 33,    // 33 happenings of foo during this interval
+        "bar": 82,    // 82 happenings of bar
+        ...
+      },
+      m: {
+        "baz": {        // Summary of timings for baz
+          count: 3,
+          min: 1,
+          max: 30,
+          mean: 17.0,
+          sum: 51.0,
+          median: 20,
+          stddev: 12.02
+        },
+        ...
+      },
+      g: {
+        "fiz": 90,     // Metric fiz gauged at 90 during this interval
+        ...
+      }
+    }
+    
+Then, the Mouth UI will just query these and display nice graphs for them!
+
+
+NOTE: You don't need to record metrics via UDP -- we like to, because they're lightweight and fast.  If you need to super-reliably record metrics, you can use the Mouth::Recorder to insert them into Mongo directly.
 
 ## Data Store
 

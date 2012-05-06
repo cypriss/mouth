@@ -1,5 +1,6 @@
 module Mouth
-  
+
+  # Simple base class to serve as an ORM for the mongo driver, without importing a large ORM like mongomapper.
   class Record
     
     # Keys are symbols
