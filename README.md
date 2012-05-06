@@ -17,17 +17,19 @@ Why duplicate effort of the excellent StatsD / Graphite packages?  I wanted a gr
 There are two kinds of metrics currently: counters and timers.  Both are stored in a time series with minute granularity.
 
 * **Counters**:
-  * how many occurances of something happen per minute?
+  * How many occurrences of something happen per minute?
   * Can be sampled
   * Standard usage: Mouth.increment("myapp.happenings")
   * Advanced usage: Mouth.increment("myapp.happenings", 1, 0.1) # 1/10 sample rate.  UDP packets are sent 1 in 10 times, but count for 1 * 10 each.
   * Gives you a time series of happenings by minute: {"myapp.happenings" => [1, 2, 5, 20, ...]}
 * **Timers**:
   * How long does something take?
-  * Standard usage: Mouth.measure("myapp.occurances", 3.3) # This occurance took 3.3 ms to occur
-  * Standard usage 2: Mouth.measure("myapp.occurances") { do_occurance() }
-  * Gives you a time series of occurance timings by minute: {"myapp.happenings" => [1, 2, 5, 20, ...]}
-* **Gauges**: (Coming soon)
+  * Standard usage: Mouth.measure("myapp.occurrences", 3.3) # This occurrence took 3.3 ms to occur
+  * Standard usage 2: Mouth.measure("myapp.occurrences") { do_occurance() }
+  * Gives you a time series of occurrence timings by minute: {"myapp.happenings" => [1, 2, 5, 20, ...]}
+* **Gauges**:
+  * Record the value of something at a specific time
+  * Standard usage: Mouth.gauge("myapp.subscriber_count", 3000) # At this time, you have 3000 subscribers.
 
 ## Installation on OSX
 
