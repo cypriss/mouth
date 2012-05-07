@@ -33,6 +33,8 @@ There are two kinds of metrics currently: counters and timers.  Both are stored 
 
 ## Installation on OSX
 
+Make sure you're using Ruby 1.9.2+ or compatible.
+
 Install mouth:
 
     gem install mouth
@@ -41,7 +43,7 @@ Install MongoDB if you haven't:
 
     brew install mongodb
 
-Start collector:
+Start collector daemon:
 
     mouth
 
@@ -75,21 +77,23 @@ Mouth comes with a built-in facility to instrument your apps:
     require 'mouth'
     require 'mouth/instrument'
     
-    Mouth.server = "0.0.0.0:8889"
+    Mouth.daemon_hostport = "0.0.0.0:8889"
     Mouth.increment('hello.world')
-    Mouth.measure('hello.happening', 42.9)
+    Mouth.measure('hello.happening') { happen! }
+    Mouth.gauge('hello.level', 1000)
     
 ### Using mouth-instrument
   
-mouth-instrument is a lightweight gem that doesn't have the baggage of the various gems that come with mouth. Its usage is nearly identical:
+[mouth-instrument](http://www.github.com/cypriss/mouth-instrument) is a lightweight gem that doesn't have the baggage of the various gems that come with mouth. Its usage is nearly identical:
     
     gem install mouth-instrument
 
     require 'mouth-instrument'
     
-    Mouth.server = "0.0.0.0:8889"
+    Mouth.daemon_hostport = "0.0.0.0:8889"
     Mouth.increment('hello.world')
-    Mouth.measure('hello.happening', 42.9)
+    Mouth.measure('hello.happening') { happen! }
+    Mouth.gauge('hello.level', 1000)
     
 ### Using any StatsD instrumentation
   
