@@ -63,10 +63,24 @@ module Mouth
     end
     
     def time_sequence
+      if self.granularity_in_minutes == 1
+        start_timestamp = self.start_time.to_i / 60
+        end_timestamp = self.end_time.to_i / 60
+      else
+        start_timestamp = timestamp_to_nearest(self.start_time, self.granularity_in_minutes, :down)
+        end_timestamp = timestamp_to_nearest(self.end_time, self.granularity_in_minutes, :up) - 1
+      end
+      
+      seq = []
+      (start_timestamp..end_timestamp).step(self.granularity_in_minutes) do |ts|
+        seq << Time.at(ts * 60)
+      end
+      seq
     end
     
     # Epoch in seconds
     def epoch_sequence
+      time_sequence.collect(&:to_i)
     end
     
     protected

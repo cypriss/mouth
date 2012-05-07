@@ -108,7 +108,7 @@ You can access and act on your metrics quite easily.
     Mouth::SequenceQuery.new("app.requests", :kind => :timer, :granularity_in_minutes => 15, :start_time => Time.now - 86400, :end_time => Time.now).sequence
     # => [{:count => 3, :min => 1, :max => 30, :mean => 17.0, :sum => 51.0, :median => 20, :stddev => 12.02}, ...]
 
-Additionally, you can insert metrics directly into the Mouth Mongo store directly, without sending UDP packets.  You might want to do this if you need guarantees UDP can't provide.
+Additionally, you can insert metrics directly into the Mongo store, without sending UDP packets.  You might want to do this if you need guarantees UDP can't provide.
 
     require 'mouth'
     require 'mouth/recorder'

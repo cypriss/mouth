@@ -175,4 +175,27 @@ class SequenceTest < Test::Unit::TestCase
     assert values.all? {|v| v == 2}
   end
   
+  def test_minute_time_sequence
+    q = Mouth::SequenceQuery.new("#{@namespace}.#{@metric}", :start_time => @start_time, :end_time => @end_time)
+    ts = q.time_sequence
+    assert_equal @start_time, ts.first
+    assert_equal @end_time, ts.last
+    assert_equal 121, ts.length
+  end
+  
+  def test_minute_epoch_sequence
+    q = Mouth::SequenceQuery.new("#{@namespace}.#{@metric}", :start_time => @start_time, :end_time => @end_time)
+    ts = q.epoch_sequence
+    assert_equal @start_time.to_i, ts.first
+    assert_equal @end_time.to_i, ts.last
+  end
+  
+  def test_15_minute_time_sequence
+    q = Mouth::SequenceQuery.new("#{@namespace}.#{@metric}", :start_time => @start_time, :end_time => @end_time, :granularity_in_minutes => 15)
+    ts = q.time_sequence
+    assert_equal Time.new(2012, 4, 1, 9, 30, 0, "-07:00"), ts.first
+    assert_equal Time.new(2012, 4, 1, 11, 30, 0, "-07:00"), ts.last
+    assert_equal q.sequence.length, ts.length
+  end
+  
 end

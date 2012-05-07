@@ -1,10 +1,8 @@
 Now
- - Make sure we have consistent naming for setting mongo servers and daemon servers
  - mouth-instrument
- - Time sequence, epoch sequence
- - Logging before/after daemonization
 
 Next
+ - Logging before/after daemonization
  - Build a caching system so that ticks don't pull in old data
  - Cookie-ize the timespan settings
  - Re implement graph autoplacement
