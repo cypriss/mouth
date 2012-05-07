@@ -1,6 +1,3 @@
-Now
- - mouth-instrument
-
 Next
  - Logging before/after daemonization
  - Build a caching system so that ticks don't pull in old data

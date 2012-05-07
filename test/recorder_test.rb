@@ -4,7 +4,7 @@ require 'test_helper'
 require 'mouth/recorder'
 require 'mouth/sequence_query'
 
-class Recorder < Test::Unit::TestCase
+class RecorderTest < Test::Unit::TestCase
   def setup
     Mouth.collection_for("test").remove
   end

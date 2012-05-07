@@ -8,8 +8,8 @@ module Mouth
       
       # Mouth.server = 'localhost:1234'
       def daemon_hostport=(hostport)
-        self.host, port = hostport.split(':')
-        self.port = port.to_i
+        self.daemon_host, port = hostport.split(':')
+        self.daemon_port = port.to_i
       end
       
       def daemon_host
