@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift 'test'
 require 'test_helper'
 
-require 'mouth/sequence'
+require 'mouth/sequence_query'
 
 class SequenceTest < Test::Unit::TestCase
   def setup
@@ -21,7 +21,7 @@ class SequenceTest < Test::Unit::TestCase
   end
   
   def test_minute_counter_sequences
-    seq = Mouth::Sequence.new("#{@namespace}.#{@metric}", :start_time => @start_time, :end_time => @end_time)
+    seq = Mouth::SequenceQuery.new("#{@namespace}.#{@metric}", :start_time => @start_time, :end_time => @end_time)
 
     sequences = seq.sequences
     
@@ -36,7 +36,7 @@ class SequenceTest < Test::Unit::TestCase
   end
   
   def test_15_minute_counter_sequences
-    seq = Mouth::Sequence.new("#{@namespace}.#{@metric}", :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
+    seq = Mouth::SequenceQuery.new("#{@namespace}.#{@metric}", :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
     
     sequences = seq.sequences
     
@@ -50,7 +50,7 @@ class SequenceTest < Test::Unit::TestCase
   end
   
   def test_15_minute_timer_sequences_basic
-    seq = Mouth::Sequence.new("#{@namespace}.#{@metric}", :kind => :timer, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
+    seq = Mouth::SequenceQuery.new("#{@namespace}.#{@metric}", :kind => :timer, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
     
     sequences = seq.sequences
     assert_equal ["test"], sequences.keys
@@ -104,7 +104,7 @@ class SequenceTest < Test::Unit::TestCase
       i += 1
     end
     
-    seq = Mouth::Sequence.new("test.test", :kind => :timer, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
+    seq = Mouth::SequenceQuery.new("test.test", :kind => :timer, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
     values = seq.sequence
     
     assert_equal 1, values.length
@@ -133,7 +133,7 @@ class SequenceTest < Test::Unit::TestCase
     
     col = Mouth.collection(Mouth.mongo_collection_name("test"))
     col.remove
-    seq = Mouth::Sequence.new("test.test", :kind => :timer, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
+    seq = Mouth::SequenceQuery.new("test.test", :kind => :timer, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
     values = seq.sequence
     
     assert_equal [{"count"=>0,
@@ -154,14 +154,14 @@ class SequenceTest < Test::Unit::TestCase
     
     col = Mouth.collection(Mouth.mongo_collection_name("test"))
     col.remove
-    seq = Mouth::Sequence.new("test.test", :kind => :counter, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
+    seq = Mouth::SequenceQuery.new("test.test", :kind => :counter, :granularity_in_minutes => 15, :start_time => @start_time, :end_time => @end_time)
     values = seq.sequence
     
     assert_equal [0], values
   end
   
   def test_minute_gauge_sequences
-    seq = Mouth::Sequence.new("#{@namespace}.#{@metric}", :kind => :gauge, :start_time => @start_time, :end_time => @end_time)
+    seq = Mouth::SequenceQuery.new("#{@namespace}.#{@metric}", :kind => :gauge, :start_time => @start_time, :end_time => @end_time)
 
     sequences = seq.sequences
     

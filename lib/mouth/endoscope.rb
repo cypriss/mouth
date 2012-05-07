@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'erb'
 require 'yajl'
 
-require 'mouth/sequence'
+require 'mouth/sequence_query'
 require 'mouth/record'
 require 'mouth/graph'
 require 'mouth/dashboard'

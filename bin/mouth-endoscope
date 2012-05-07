@@ -12,11 +12,8 @@ rescue LoadError
 end 
 
 Vegas::Runner.new(Mouth::Endoscope, 'mouth-endoscope') do |runner, opts, app|
-  opts.on("--mongohost HOST", "STORE SUCKINGS IN THIS MONGO HOST") do |mongo_host|
-    Mouth.mongo_host = mongo_host
-  end
-  
-  opts.on("--mongoport PORT", "STORE SUCKINGS IN THIS MONGO PORT") do |mongo_port|
-    Mouth.mongo_port = mongo_port
+  opts.on("--mongohost HOSTPORT", "READ FROM THIS MONGO  [eg, localhost or localhost:27017]") do |mongo_hostport|
+    Mouth.mongo_hostports ||= []
+    Mouth.mongo_hostports << mongo_hostport
   end
 end

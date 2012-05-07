@@ -20,11 +20,11 @@ module Mouth
     attr_accessor :port
 
     # Actual EM::Mongo connection
-    attr_accessor :mongo_db
+    attr_accessor :mongo
     
     # Info to connect to mongo
     attr_accessor :mongo_db_name
-    attr_accessor :mongo_hosts
+    attr_accessor :mongo_hostports
     
     # Accumulators of our data
     attr_accessor :counters
@@ -39,7 +39,15 @@ module Mouth
       self.host = options[:host] || "localhost"
       self.port = options[:port] || 8889
       self.mongo_db_name = options[:mongo_db_name] || "mouth"
-      self.mongo_hosts = options[:mongo_hosts] || ["localhost"]
+      hostports = options[:mongo_hostports] || [["localhost", EM::Mongo::DEFAULT_PORT]]
+      self.mongo_hostports = hostports.collect do |hp|
+        if hp.is_a?(String)
+          host, port = hp.split(":")
+          [host, port || EM::Mongo::DEFAULT_PORT]
+        else
+          hp
+        end
+      end
       
       self.udp_packets_received = 0
       self.mongo_flushes = 0
@@ -52,7 +60,7 @@ module Mouth
     def suck!
       EM.run do
         # Connect to mongo now
-        self.mongo_db
+        self.mongo
 
         EM.open_datagram_socket host, port, SuckerConnection do |conn|
           conn.sucker = self
@@ -87,7 +95,7 @@ module Mouth
       key = Mouth.parse_key(key).join(".")
       value = value.to_f
       
-      ts = minute_timestamps
+      ts = Mouth.current_timestamp
       
       if command == "ms"
         self.timers[ts] ||= {}
@@ -111,7 +119,7 @@ module Mouth
     end
     
     def flush!
-      ts = minute_timestamps
+      ts = Mouth.current_timestamp
       limit_ts = ts - 1
       mongo_docs = {}
       
@@ -186,18 +194,18 @@ module Mouth
         collection_name = Mouth.mongo_collection_name(ns)
         doc["t"] = ts.to_i
         
-        self.mongo_db.collection(collection_name).insert(doc)
+        self.mongo.collection(collection_name).insert(doc)
       end
       
       self.mongo_flushes += 1 if mongo_docs.any?
     end
     
-    def mongo_db
-      @mongo_db ||= begin
-        if self.mongo_hosts.length == 1
-          EM::Mongo::Connection.new(self.mongo_hosts.first).db(self.mongo_db_name)
+    def mongo
+      @mongo ||= begin
+        if self.mongo_hostports.length == 1
+          EM::Mongo::Connection.new(*self.mongo_hostports.first).db(self.mongo_db_name)
         else
-          raise "TODO: ability to connect to a replica set."
+          raise "Ability to connect to a replica set not implemented."
         end
       end
     end
@@ -207,10 +215,6 @@ module Mouth
     end
     
     private
-    
-    def minute_timestamps
-      Time.now.to_i / 60
-    end
     
     def analyze_timer(values)
       values.sort!

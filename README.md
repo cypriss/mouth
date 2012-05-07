@@ -99,19 +99,27 @@ Mouth is StatsD compatible -- if you've instrumented your application to record 
 
 You can access and act on your metrics quite easily.
 
-  require 'mouth'
-  require 'mouth/sequence'
-  
-  Mouth.host = "0.0.0.0:8889"
-  Sequence.new("exceptions.app", :kind => :counter).sequence
-  # => [4, 9, 0, ...]
-  
-  Sequence.new("app.requests", :kind => :timer, :granularity_in_minutes => 15, :start_time => Time.now - 86400, :end_time => Time.now).sequence
-  # => [{:count => 3, :min => 1, :max => 30, :mean => 17.0, :sum => 51.0, :median => 20, :stddev => 12.02}, ...]
+    require 'mouth'
+    require 'mouth/sequence_query'
+    
+    Mouth::SequenceQuery.new("exceptions.app", :kind => :counter).sequence
+    # => [4, 9, 0, ...]
+    
+    Mouth::SequenceQuery.new("app.requests", :kind => :timer, :granularity_in_minutes => 15, :start_time => Time.now - 86400, :end_time => Time.now).sequence
+    # => [{:count => 3, :min => 1, :max => 30, :mean => 17.0, :sum => 51.0, :median => 20, :stddev => 12.02}, ...]
+
+Additionally, you can insert metrics directly into the Mouth Mongo store directly, without sending UDP packets.  You might want to do this if you need guarantees UDP can't provide.
+
+    require 'mouth'
+    require 'mouth/recorder'
+    
+    Mouth::Recorder.increment("app.happening")
+    Mouth::Recorder.gauge("app.level", 10)
+    # Mouth::Recorder.measure("app.occurrence") { occur! } # Currently unsupported
 
 ## Tech
 
-* **Ruby** - 1.9.2+ is required.  Ruby was chosen because many Ruby shops already have it deployed as part of their infrastucture.  By putting everything in Ruby, node + python aren't needed.
+* **Ruby** - 1.9.2+ is required.  Ruby was chosen because many Ruby shops already have it deployed as part of their infrastructure.  By putting everything in Ruby, node + python aren't needed.
 * **MongoDB** -  Mouth stores metrics in Mongo.  Mongo was chosen for 3 reasons:
   * It's very easy to install and get going
   * It has drivers for everything, so getting at your data is super easy
@@ -121,12 +129,11 @@ You can access and act on your metrics quite easily.
 * **Backbone.js** - The web UI is powered by Backbone.js
 * **D3.js** - The graphs are powered by D3.js
 
-
 ## Contributing
 
-You're interested in contributing to Mouth? *AWESOME*. Here are the basic steps:
+You're interested in contributing to Mouth? *AWESOME*. Both bug reports and pull requests are welcome!
 
-fork Mouth from here: http://github.com/cypriss/mouth
+Fork Mouth from here: http://github.com/cypriss/mouth
 
 1. Clone your fork
 2. Hack away
@@ -137,4 +144,4 @@ fork Mouth from here: http://github.com/cypriss/mouth
 
 ## Thanks
 
-Thanks to UserVoice.com for sponsoring this project.  Thanks to the [StatsD](https://github.com/etsy/statsd) project for massive inspiration.  Other contributors: https://github.com/cypriss/mouth/graphs/contributors
+Thanks to [UserVoice.com](http://developer.uservoice.com) for sponsoring this project.  Thanks to the [StatsD](https://github.com/etsy/statsd) project for massive inspiration.  Other contributors: https://github.com/cypriss/mouth/graphs/contributors

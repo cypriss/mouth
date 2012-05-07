@@ -27,7 +27,7 @@ module Mouth
     def data(opts = {})
       sources = self.attributes[:sources] || []
       seq_opts = {:kind => self.attributes[:kind].to_sym}.merge(opts)
-      sequence = Sequence.new(sources, seq_opts)
+      sequence = SequenceQuery.new(sources, seq_opts)
       seqs = sequence.sequences
       seqs.map do |seq|
         {

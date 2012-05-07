@@ -25,7 +25,7 @@ module Mouth
       tuples.sort_by {|t| "#{t[:kind]}#{t[:source]}" }.collect {|t| new(t) }
     end
     
-    def self.all_for_collection(col, window = Time.now.to_i / 60 - 120)
+    def self.all_for_collection(col, window = Mouth.current_timestamp - 120)
       map_function = <<-JS
         function() {
           var k, vh;

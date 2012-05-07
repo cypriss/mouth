@@ -25,10 +25,10 @@ You can build nice dashboards of your metrics and come back to them later.  The 
 That's all great, but doesn't touch on a huge benefit of mouth -- how accessible the data is.  We use Nagios at UserVoice, and wanted a way to fire alerts if we're getting too many exceptions.  This was trivial:
 
     require 'mouth'
-    require 'mouth/sequence'
+    require 'mouth/sequence_query'
     
-    seq = Mouth::Sequence.new('exceptions.app', :start_time => 5.minutes.ago)
-    if total = seq.sequence.sum > 10
+    query = Mouth::SequenceQuery.new('exceptions.app', :start_time => 5.minutes.ago)
+    if total = query.sequence.sum > 10
       Nagios.trigger_alert("Oh no! There were #{total} exceptions in 5 minutes!")
     end
 
@@ -38,8 +38,8 @@ It turns out that this is the very similar technology and techniques that power 
     
 Then pull up a report of it to display in your end-user facing UI:
     
-    seq = Mouth::Sequence.new("pageviews.customer#{cust_id}", :start_time => 1.week.ago, :granularity_in_minutes => 60)
-    seq.sequence # You can go ahead and graph these datapoints: [1209, 234, ...]
+    query = Mouth::SequenceQuery.new("pageviews.customer#{cust_id}", :start_time => 1.week.ago, :granularity_in_minutes => 60)
+    query.sequence # You can go ahead and graph these datapoints: [1209, 234, ...]
 
 Because Mouth data is backed in Mongo, it's relatively scalable and reliable.  Because it's easily accessed in Ruby, it's super easy to incorporate into your apps, scripts, and monitoring tools.
 

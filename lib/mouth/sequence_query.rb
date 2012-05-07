@@ -1,16 +1,16 @@
 module Mouth
   
   # Usage: 
-  # Sequence.new(["namespace.foobar_occurances"]).sequences
+  # SequenceQuery.new(["namespace.foobar_occurances"]).sequences
   # # => {"foobar_occurances" => [4, 9, 0, ...]}
   #
-  # Sequence.new(["namespace.foobar_occurances", "namespace.baz"], :kind => :timer).sequences
+  # SequenceQuery.new(["namespace.foobar_occurances", "namespace.baz"], :kind => :timer).sequences
   # # => {"foobar_occurances" => [{:count => 3, :min => 1, ...}, ...], "baz" => [...]}
   #
-  # s = Sequence.new(...)
+  # s = SequenceQuery.new(...)
   # s.time_sequence
   # # => [Time.new(first datapoint), Time.new(second datapoint), ..., Time.new(last datapoint)]
-  class Sequence
+  class SequenceQuery
     
     attr_accessor :keys
     attr_accessor :kind
@@ -261,7 +261,7 @@ module Mouth
     end
     
     def collection
-      @collection ||= Mouth.collection(Mouth.mongo_collection_name(self.namespace))
+      @collection ||= Mouth.collection_for(self.namespace)
     end
     
     def kind_letter
@@ -294,11 +294,11 @@ module Mouth
       opts = {
         :namespace => "sample",
         :metric => "sample",
-        :start_time => (Time.now.to_i / 60 - 300),
-        :end_time => (Time.now.to_i / 60),
+        :start_time => (Mouth.current_timestamp - 300),
+        :end_time => (Mouth.current_timestamp / 60),
       }.merge(opts)
       
-      collection_name = Mouth.mongo_collection_name(opts[:namespace])
+      collection = Mouth.collection_for(opts[:namespace])
       
       counter = 99
       gauge = 50
@@ -324,7 +324,7 @@ module Mouth
         end
         
         # Insert the document into mongo
-        Mouth.collection(collection_name).update({"t" => t}, {"$set" => set}, :upsert => true)
+        collection.update({"t" => t}, {"$set" => set}, :upsert => true)
         
         # Update counter randomly
         counter += rand(10) - 5

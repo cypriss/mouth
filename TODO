@@ -1,6 +1,8 @@
 Now
- - Gauges
- - Mouth::Recorder
+ - Make sure we have consistent naming for setting mongo servers and daemon servers
+ - mouth-instrument
+ - Time sequence, epoch sequence
+ - Logging before/after daemonization
 
 Next
  - Build a caching system so that ticks don't pull in old data
@@ -12,6 +14,8 @@ Next
  - Build in some mechanisms to diagnose mongo connection issues
  - Auto refreshing source list (every minute?)
  - More Tests
+   - sequence: generate sample
+   - source
  - Figure out time zones
  - replicaset connection for endoscope
 
@@ -31,7 +35,6 @@ Someday
 
 Bugs:
  - When picker is open, changing dashboards should hide picker
- - tooltip spawns multiple copies on large datasets
 
 Refactorings:
  - reconcile naming of 'sources' sometimes being array of strings and sometimes array of objects

@@ -12,8 +12,6 @@ module Mouth
     attr_accessor :options
     
     def initialize(opts={})
-      puts "Starting Mouth..."
-      
       self.log_file = opts[:log_file]
       self.pid_file = opts[:pid_file]
       self.verbosity = opts[:verbosity]
@@ -22,6 +20,8 @@ module Mouth
     
     def run!
       kill! if self.options[:kill]
+      
+      puts "Starting Mouth..."
       
       daemonize!
       save_pid!

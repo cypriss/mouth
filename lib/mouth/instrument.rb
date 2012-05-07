@@ -4,20 +4,20 @@ require 'benchmark'
 module Mouth
   unless self.respond_to?(:measure)
     class << self
-      attr_accessor :host, :port, :disabled
+      attr_accessor :daemon_host, :daemon_port, :disabled
       
       # Mouth.server = 'localhost:1234'
-      def server=(conn)
-        self.host, port = conn.split(':')
+      def daemon_hostport=(hostport)
+        self.host, port = hostport.split(':')
         self.port = port.to_i
       end
       
-      def host
-        @host || "localhost"
+      def daemon_host
+        @daemon_host || "localhost"
       end
       
-      def port
-        @port || 8889
+      def daemon_port
+        @daemon_port || 8889
       end
 
       def measure(key, milli = nil)
@@ -53,7 +53,7 @@ module Mouth
         command = "#{k}:#{v}|#{op}"
         command << "|@#{sample_rate}" if sample_rate
         
-        socket.send(command, 0, self.host, self.port) 
+        socket.send(command, 0, self.daemon_host, self.daemon_port) 
       end
     end
   end

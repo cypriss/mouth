@@ -60,9 +60,9 @@ parser = OptionParser.new do |op|
   end
   
   # NOTE: this option can be given multiple times for a replica set
-  op.on("--mongohost HOSTPORT", "STORE SUCKINGS IN THIS MONGO") do |mongo_host|
-    options[:mongo_hosts] ||= []
-    options[:mongo_hosts] << mongo_host
+  op.on("--mongohost HOSTPORT", "STORE SUCKINGS IN THIS MONGO [eg, localhost or localhost:27017]") do |mongo_hostport|
+    options[:mongo_hostports] ||= []
+    options[:mongo_hostports] << mongo_hostport
   end
 
   op.on("-h", "--help", "I WANT MOAR HALP") do
